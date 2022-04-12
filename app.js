@@ -4,7 +4,7 @@ require('dotenv').config();
 const app = express();
 
 //Set up EJS
-app.set('view-engine', 'ejs')
+app.set('view-engine', 'ejs');
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {

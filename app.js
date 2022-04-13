@@ -1,5 +1,7 @@
 const express = require('express');
 const session = require('express-session');
+const FileStore = require('session-file-store')(session);
+
 require('dotenv').config();
 
 const app = express();
@@ -24,7 +26,8 @@ let session_config = {
 if (process.env.NODE_ENV === 'production'){
 	session_config.cookie.secure = true;
 } else if (process.env.NODE_ENV === 'development'){
-
+	//Set Session Store to FileStore instead of MemoryStore
+	session_config.store = new FileStore({});
 }
 app.use(session(session_config));
 

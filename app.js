@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
+const mongoose = require('mongoose');
 
 require('dotenv').config();
 
@@ -31,9 +32,13 @@ if (process.env.NODE_ENV === 'production'){
 }
 app.use(session(session_config));
 
+//Set up Database
+mongoose.connect(process.env.DB_CONNECTION_STRING)
+	.then(() => console.log('Connected to MongoDB...'))
+	.catch(err => console.error('Could not connect to MongoDB...', err));
+
 //Set Routers
 const homeRouter = require('./routes/home');
 app.use('/', homeRouter);
-
 
 module.exports = app;

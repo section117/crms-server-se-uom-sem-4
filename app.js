@@ -39,6 +39,8 @@ mongoose.connect(process.env.DB_CONNECTION_STRING)
 
 //Set Routers
 const homeRouter = require('./routes/home');
+const userRouter = require('./routes/user');
 app.use('/', homeRouter);
+app.use('/', userRouter);
 
 module.exports = app;

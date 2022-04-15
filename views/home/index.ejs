@@ -42,25 +42,25 @@
             </div>
             <div class="col-md-8 col-lg-6 col-xl-6 offset-xl-1">
                 <div class=" font-weight-bold h1 mt-3 mb-5 mr-5">Customer <span class="p-1" style="color: #9c27b0;">Relationship</span> Management System</div>
-                <form class="pr-5">
+                <form class="pr-5" method="post" action="login">
                     <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                         <p class="lead fw-normal mb-3 me-3 h2 font-weight-bold">Sign in</p>
                     </div>
 
                     <div class="form-outline mb-4">
                         <input type="email" id="form3Example3" class="form-control form-control-lg"
-                               placeholder="" />
+                               placeholder=""  name="email" />
                         <label class="form-label" for="form3Example3">Email address</label>
                     </div>
 
                     <div class="form-outline mb-3">
                         <input type="password" id="form3Example4" class="form-control form-control-lg"
-                               placeholder="" />
+                               placeholder=""  name="password" />
                         <label class="form-label" for="form3Example4">Password</label>
                     </div>
 
                     <div class="text-center text-lg-start mt-4 pt-2">
-                        <button type="button" class="btn btn-primary btn-lg"
+                        <button type="submit" class="btn btn-primary btn-lg"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
                         <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/pages/dashboard.html"
                                                                                           class="link-danger">Register</a></p>

@@ -28,7 +28,7 @@ let session_config = {
 if (process.env.NODE_ENV === 'production'){
 	session_config.cookie.secure = true;
 } else if (process.env.NODE_ENV === 'development'){
-	//Set Session Store to FileStore instead of MemoryStore
+	//Set Session Store to MongoDBStore instead of MemoryStore
 	session_config.store = new MongoDBStore({
 		uri: process.env.DB_CONNECTION_STRING,
 		collection: 'sessions'

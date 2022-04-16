@@ -1,7 +1,8 @@
 const express = require('express');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
+const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 require('dotenv').config();
 
@@ -28,7 +29,14 @@ if (process.env.NODE_ENV === 'production'){
 	session_config.cookie.secure = true;
 } else if (process.env.NODE_ENV === 'development'){
 	//Set Session Store to FileStore instead of MemoryStore
-	session_config.store = new FileStore({});
+	session_config.store = new MongoDBStore({
+		uri: process.env.DB_CONNECTION_STRING,
+		collection: 'sessions'
+	}, (error) => {
+		if (error){
+			console.log(error);
+		}
+	});
 }
 app.use(session(session_config));
 
@@ -36,6 +44,10 @@ app.use(session(session_config));
 mongoose.connect(process.env.DB_CONNECTION_STRING)
 	.then(() => console.log('Connected to MongoDB...'))
 	.catch(err => console.error('Could not connect to MongoDB...', err));
+
+//Set up Passport
+app.use(passport.initialize({}));
+app.use(passport.session({}));
 
 //Set Routers
 const homeRouter = require('./routes/home');

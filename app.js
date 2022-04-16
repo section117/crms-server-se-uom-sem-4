@@ -25,15 +25,15 @@ let session_config = {
 	resave: false,
 	saveUninitialized: false
 };
-if (process.env.NODE_ENV === 'production'){
+if (process.env.NODE_ENV === 'production') {
 	session_config.cookie.secure = true;
-} else if (process.env.NODE_ENV === 'development'){
+} else if (process.env.NODE_ENV === 'development') {
 	//Set Session Store to MongoDBStore instead of MemoryStore
 	session_config.store = new MongoDBStore({
 		uri: process.env.DB_CONNECTION_STRING,
 		collection: 'sessions'
 	}, (error) => {
-		if (error){
+		if (error) {
 			console.log(error);
 		}
 	});
@@ -52,7 +52,9 @@ app.use(passport.session({}));
 //Set Routers
 const homeRouter = require('./routes/home');
 const userRouter = require('./routes/user');
+const dashboardRouter = require('./routes/dashboard');
 app.use('/', homeRouter);
 app.use('/', userRouter);
+app.use('/', dashboardRouter);
 
 module.exports = app;

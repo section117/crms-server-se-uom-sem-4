@@ -1,0 +1,27 @@
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
+const userService = require('../services/userService');
+
+passport.use(new LocalStrategy({
+	usernameField: 'email',
+	passwordField: 'password',
+},
+async (username, password, done) => {
+	const user = await userService.getUserByEmail(username);
+
+	if(!user) return done(null, false, { message: 'EMAIL NOT FOUND' });
+
+	if (user.password === password){
+		return done(null, user, 'SUCCESS');}
+	else return done(null, false, { message: 'WRONG PASSWORD' });
+}));
+
+passport.serializeUser(function(user, done) {
+	done(null, {id: user.id, first_name: user.first_name, last_name: user.last_name, user_type: user.user_type});
+});
+passport.deserializeUser(function(user, done) {
+	done(null, user);
+});
+
+module.exports = passport;

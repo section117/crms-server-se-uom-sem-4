@@ -5,4 +5,22 @@ const getUserByEmail = async (email) => {
 	return user;
 };
 
+
+const saveUser = async (user) => {
+
+
+	return userRepository.saveUser(user);
+
+};
+
+
+
+
+
+
+
+
+
+
 exports.getUserByEmail = getUserByEmail;
+exports.saveUser = saveUser;

@@ -53,8 +53,10 @@ app.use(passport.session({}));
 const homeRouter = require('./routes/home');
 const userRouter = require('./routes/user');
 const dashboardRouter = require('./routes/dashboard');
+const chatRouter = require('./routes/chat');
 app.use('/', homeRouter);
 app.use('/', userRouter);
 app.use('/', dashboardRouter);
+app.use('/', chatRouter);
 
 module.exports = app;

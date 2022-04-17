@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../components/head.ejs'); %>
+        <title>Material Dashboard by Creative Tim</title>
+</head>
+
+<body class="">
+    <div class="wrapper">
+        <%- include('../components/sidebar.ejs'); %>
+            <div class="main-panel">
+                <%- include('../components/navbar.ejs'); %>
+                    <div class="content">
+                        <!-- <div class="container-fluid"> -->
+                            <!--Content goes here-->
+                            <%- include('../chat/chattemp.ejs'); %>
+                            <!--End content-->
+                        <!-- </div> -->
+                    </div>
+                    <%- include('../components/footer.ejs'); %>
+            </div>
+    </div>
+    <%- include('../components/settings-popup.ejs'); %>
+        <%- include('../components/js-scripts.ejs'); %>
+</body>
+
+</html>

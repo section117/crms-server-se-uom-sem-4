@@ -6,4 +6,6 @@ const userController = require('../controllers/userController');
 
 router.get('/logout', userController.handleLogout);
 
+
+
 module.exports = router;

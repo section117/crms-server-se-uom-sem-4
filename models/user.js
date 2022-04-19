@@ -37,11 +37,11 @@ const userSchema = new mongoose.Schema({
 		maxlength: 25,
 		enum: ['COMPANY_OWNER', 'CSSA', 'SYSTEM_ADMIN']
 	},
-	company: {
-		required: false,
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Company'
-	}
+	// company: {
+	// 	required: false,
+	// 	type: mongoose.Schema.Types.ObjectId,
+	// 	ref: 'Company'
+	// }
 });
 
 const userModel = mongoose.model('User', userSchema);

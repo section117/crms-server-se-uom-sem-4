@@ -20,6 +20,7 @@ app.use(express.static('public'));
 //Set up Session
 app.use(getExpressSessionStore());
 
+
 //Set up Database
 mongoose.connect(process.env.DB_CONNECTION_STRING)
 	.then(() => console.log('Connected to MongoDB...'))
@@ -36,6 +37,7 @@ const chatRouter = require('./routes/chat');
 app.use('/', homeRouter);
 app.use('/', userRouter);
 app.use('/chats', chatRouter);
+
 
 //Set up Socket.io
 const { createIO } = require('./config/socket-io/socketio-config');

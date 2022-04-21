@@ -1,3 +1,5 @@
+import axios from 'https://cdn.skypack.dev/axios';
+import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 
 class AllChatsComponent extends React.Component {
 

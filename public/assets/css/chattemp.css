@@ -99,7 +99,7 @@ body {
   }
 
 .friend-drawer--onselected {
-  background: #74b9ff;
+  background: rgba(189,189,189,0.95);
   cursor: pointer;
 }
 .friend-drawer--onselected p,

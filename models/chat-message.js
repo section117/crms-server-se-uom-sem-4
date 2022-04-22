@@ -17,7 +17,11 @@ const chatMessageSchema = new mongoose.Schema({
 		ref: 'Chat',
 		required: true,
 	},
-});
+	updated_at: {
+		type: Date,
+		required: true
+	}
+}, { collection: 'chat_messages' });
 
 const chatMessageModel = mongoose.model('ChatMessage', chatMessageSchema);
 

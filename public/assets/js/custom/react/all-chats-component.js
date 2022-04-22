@@ -11,6 +11,8 @@ class AllChatsComponent extends React.Component {
 			is_online: false,
 			active_chats: [],
 			user: null,
+			loaded_chat_messages: [],
+			loaded_chat: null,
 		};
 	}
 
@@ -175,18 +177,42 @@ class AllChatsComponent extends React.Component {
 
 	};
 
-	loadChat = (chat_id) => {
+	loadChat = async (chat_id) => {
 		console.log(chat_id);
 
 		const { active_chats } = this.state;
 
+		let selected_chat;
 		const modified_chats = active_chats.map((chat, index) => {
 			let c = {...chat};
-			c['selected'] = chat._id === chat_id;
+			if(chat._id === chat_id) {
+				selected_chat = chat;
+				c['selected'] = true;
+			}else{
+				c['selected'] = false;
+			}
 			return c;
 		});
 
-		this.setState({active_chats: modified_chats});
+		const chatMessages = await this.loadChatMessagesByChatID(selected_chat._id);
+
+
+		this.setState({
+			active_chats: modified_chats,
+			is_initial: false,
+			loaded_chat: selected_chat,
+			loaded_chat_messages: chatMessages,
+		});
+	};
+
+	loadChatMessagesByChatID = async (chat_id) => {
+		try {
+			const response = await axios.get('/chat-messages/get/'+chat_id);
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			return null;
+		}
 	};
 
 	renderWelcomeScreen = () => {
@@ -213,6 +239,35 @@ class AllChatsComponent extends React.Component {
 	};
 
 	renderMessages = () => {
+
+		const { loaded_chat, loaded_chat_messages } = this.state;
+
+		const chatMessages = loaded_chat_messages.map((cm, index) => {
+			//left
+			if(cm.is_incoming) {
+				return (
+					<div className="row no-gutters">
+						<div className="col-md-3">
+							<div className="chat-bubble chat-bubble--left">
+								{cm.message}
+							</div>
+						</div>
+					</div>
+				);
+			} else {
+				//right
+				return (
+					<div className="row no-gutters">
+						<div className="col-md-3 offset-md-9">
+							<div className="chat-bubble chat-bubble--right">
+								{cm.message}
+							</div>
+						</div>
+					</div>
+				);
+			}
+		});
+
 		return (
 			<div className="col-md-8">
 				<div className="settings-tray">
@@ -220,66 +275,19 @@ class AllChatsComponent extends React.Component {
 						<img className="profile-image"
 							 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>
 						<div className="text">
-							<h6>Robo Cop</h6>
-							<p className="text-muted">Layin' down the law since like before Christ...</p>
+							<h6>{loaded_chat.customer_name}</h6>
+							<p className="text-muted">Email - {loaded_chat.customer_email}</p>
 						</div>
 						<span className="settings-tray--right">
-                   <i className="material-icons">cached</i>
-                        <i className="material-icons">message</i>
-										<i className="material-icons">menu</i>
-                </span>
+                   			<i className="material-icons">cached</i>
+                        	<i className="material-icons">message</i>
+							<i className="material-icons">menu</i>
+                		</span>
 					</div>
 				</div>
 				<div className="chat-panel">
-					<div className="row no-gutters">
-						<div className="col-md-3">
-							<div className="chat-bubble chat-bubble--left">
-								Hello dude!
-							</div>
-						</div>
-					</div>
-					<div className="row no-gutters">
-						<div className="col-md-3 offset-md-9">
-							<div className="chat-bubble chat-bubble--right">
-								Hello dude!
-							</div>
-						</div>
-					</div>
-					<div className="row no-gutters">
-						<div className="col-md-3 offset-md-9">
-							<div className="chat-bubble chat-bubble--right">
-								Hello dude!
-							</div>
-						</div>
-					</div>
-					<div className="row no-gutters">
-						<div className="col-md-3">
-							<div className="chat-bubble chat-bubble--left">
-								Hello dude!
-							</div>
-						</div>
-					</div>
-					<div className="row no-gutters">
-						<div className="col-md-3">
-							<div className="chat-bubble chat-bubble--left">
-								Hello dude!
-							</div>
-						</div>
-					</div>
-					<div className="row no-gutters">
-						<div className="col-md-3">
-							<div className="chat-bubble chat-bubble--left">
-								Hello dude!
-							</div>
-						</div>
-					</div>
-					<div className="row no-gutters">
-						<div className="col-md-3 offset-md-9">
-							<div className="chat-bubble chat-bubble--right">
-								Hello dude!
-							</div>
-						</div>
-					</div>
+					{chatMessages}
+
 					<div className="row">
 						<div className="col-12">
 							<div className="chat-box-tray">

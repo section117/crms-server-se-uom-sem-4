@@ -11,5 +11,12 @@ const getUserTypeFromSession = session => {
 	else return null;
 };
 
+const getUserIDFromSession = session => {
+	if(session && session.passport && session.passport.user && session.passport.user.id)
+		return session.passport.user.id;
+	else return null;
+};
+
 exports.getUserFromSession = getUserFromSession;
 exports.getUserTypeFromSession = getUserTypeFromSession;
+exports.getUserIDFromSession = getUserIDFromSession;

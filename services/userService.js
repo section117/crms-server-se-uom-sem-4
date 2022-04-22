@@ -7,15 +7,13 @@ const getUserByEmail = async (email) => {
 
 
 const saveUser = async (user) => {
-
-
 	return userRepository.saveUser(user);
-
 };
 
 
-
-
+const getUserByID = async (user_id) => {
+	return await userRepository.getUserByID(user_id);
+};
 
 
 
@@ -24,3 +22,4 @@ const saveUser = async (user) => {
 
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
+exports.getUserByID = getUserByID;

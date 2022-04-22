@@ -32,8 +32,12 @@ const saveUser = async (user) => {
 
 };
 
-
+const getUserByID = async (user_id) => {
+	const user = await User.findById(user_id);
+	return user ? user : null;
+};
 
 
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
+exports.getUserByID = getUserByID;

@@ -97,6 +97,17 @@ body {
   .friend-drawer--onhover:hover .time {
     color: #fff !important;
   }
+
+.friend-drawer--onselected {
+  background: #74b9ff;
+  cursor: pointer;
+}
+.friend-drawer--onselected p,
+.friend-drawer--onselected h6,
+.friend-drawer--onselected .time {
+  color: #fff !important;
+}
+
   hr {
     margin: 5px auto;
     width: 60%;

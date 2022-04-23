@@ -1,8 +1,8 @@
 const chatRepository = require('../repositories/chatRepository');
 
 
-const getActiveChatsOfCSSA = async (user_id) => {
-	return await chatRepository.getChatsOfCSSA(user_id, 'Active');
+const getActiveChatsOfCSSAWithMessages = async (user_id) => {
+	return await chatRepository.getChatsOfCSSAWithMessages(user_id, 'ACTIVE');
 };
 
-exports.getActiveChatsOfCSSA = getActiveChatsOfCSSA;
+exports.getActiveChatsOfCSSAWithMessages = getActiveChatsOfCSSAWithMessages;

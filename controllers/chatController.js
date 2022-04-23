@@ -15,7 +15,7 @@ const getActiveChatsOfCSSA = async (req, res) => {
 		return;
 	}
 
-	const chats = await chatService.getActiveChatsOfCSSA(user_id);
+	const chats = await chatService.getActiveChatsOfCSSAWithMessages(user_id);
 
 	res.json(chats);
 };

@@ -12,14 +12,10 @@ const chatMessageSchema = new mongoose.Schema({
 		type: Boolean,
 		required: true
 	},
-	chat: {
+	chat_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Chat',
 		required: true,
-	},
-	updated_at: {
-		type: Date,
-		required: true
 	}
 }, { collection: 'chat_messages' });
 

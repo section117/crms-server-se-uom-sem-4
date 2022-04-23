@@ -194,14 +194,12 @@ class AllChatsComponent extends React.Component {
 			return c;
 		});
 
-		const chatMessages = await this.loadChatMessagesByChatID(selected_chat._id);
-
 
 		this.setState({
 			active_chats: modified_chats,
 			is_initial: false,
 			loaded_chat: selected_chat,
-			loaded_chat_messages: chatMessages,
+			loaded_chat_messages: selected_chat.chat_messages,
 		});
 	};
 

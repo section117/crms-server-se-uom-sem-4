@@ -1,5 +1,6 @@
 const {getExpressSessionStore} = require('../../session-config');
-const {getUserFromSession} = require('../../../helpers/session-helper');
+const {getUserFromSession, getUserIDFromSession} = require('../../../helpers/session-helper');
+const { putSocket, removeSocket } = require('./cssa-socket-store');
 
 const createAndConfigureCSSAMessagesNamespace = (io) => {
 	const cssaChatsWSNamespace = io.of('/cssa-messages');
@@ -13,18 +14,31 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 		console.log('A new user connected to /cssa-messages namespace with Socket ID -', socket.id);
 
 		//Disconnect Event Listener
-		socket.on('disconnect', disconnectEventListener);
+		socket.on('disconnect', firstDisconnectEventListener);
 
 		const user = getUserFromSession(socket.request.session);
+		const user_id = getUserIDFromSession(socket.request.session);
 		validateConnection(user, socket);
 
+		//Register additional Event Listeners
+		socket.on('disconnect', (reason) => {
+			secondDisconnectEventListener(reason, user_id, socket.id);
+		});
+
+		//Add socket to the SocketStore
+		putSocket(user_id, socket);
 	});
 
 	return cssaChatsWSNamespace;
 };
 
-const disconnectEventListener = (reason) => {
+const firstDisconnectEventListener = (reason) => {
 	console.log('A user disconnected from /cssa-messages namespace', reason);
+};
+
+const secondDisconnectEventListener = (reason, user_id, socket_id) => {
+	console.log('A user disconnected from /cssa-messages namespace', reason, 'with User ID -', user_id);
+	removeSocket(user_id, socket_id);
 };
 
 const validateConnection = (user, socket) => {

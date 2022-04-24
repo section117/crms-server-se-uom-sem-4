@@ -1,8 +1,9 @@
 const express = require('express');
-const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
+const { getExpressSessionStore } = require('./config/session-config');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const { createServer } = require('http');
+const morgan = require('morgan');
 
 require('dotenv').config();
 
@@ -17,28 +18,8 @@ app.set('view-engine', 'ejs');
 app.use(express.static('public'));
 
 //Set up Session
-let session_config = {
-	secret: process.env.SESSION_SECRET,
-	cookie: {
-		sameSite: 'lax',
-	},
-	resave: false,
-	saveUninitialized: false
-};
-if (process.env.NODE_ENV === 'production') {
-	session_config.cookie.secure = true;
-} else if (process.env.NODE_ENV === 'development') {
-	//Set Session Store to MongoDBStore instead of MemoryStore
-	session_config.store = new MongoDBStore({
-		uri: process.env.DB_CONNECTION_STRING,
-		collection: 'sessions'
-	}, (error) => {
-		if (error) {
-			console.log(error);
-		}
-	});
-}
-app.use(session(session_config));
+app.use(getExpressSessionStore());
+
 
 //Set up Database
 mongoose.connect(process.env.DB_CONNECTION_STRING)
@@ -52,9 +33,23 @@ app.use(passport.session({}));
 //Set Routers
 const homeRouter = require('./routes/home');
 const userRouter = require('./routes/user');
-const dashboardRouter = require('./routes/dashboard');
+const chatRouter = require('./routes/chat');
+const chatMessagesRouter = require('./routes/chat-messages');
 app.use('/', homeRouter);
 app.use('/', userRouter);
-app.use('/', dashboardRouter);
+app.use('/chats', chatRouter);
+app.use('/chat-messages', chatMessagesRouter);
 
-module.exports = app;
+
+//Set up Socket.io
+const { createIO } = require('./config/socket-io/socketio-config');
+const httpServer = createServer(app);
+createIO(httpServer);
+
+//Set up Logging using Morgan
+if(process.env.LOG_FORMAT_MORGAN)
+	app.use(morgan(process.env.LOG_FORMAT_MORGAN));
+
+module.exports = {
+	app: httpServer
+};

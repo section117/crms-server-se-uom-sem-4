@@ -12,12 +12,12 @@ const chatMessageSchema = new mongoose.Schema({
 		type: Boolean,
 		required: true
 	},
-	chat: {
+	chat_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Chat',
 		required: true,
-	},
-});
+	}
+}, { collection: 'chat_messages' });
 
 const chatMessageModel = mongoose.model('ChatMessage', chatMessageSchema);
 

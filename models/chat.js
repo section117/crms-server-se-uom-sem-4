@@ -84,6 +84,10 @@ const chatSchema = new mongoose.Schema({
 		type: reviewSchema,
 		required: false
 	},
+	updated_at: {
+		type: Date,
+		required: true
+	}
 });
 
 const chatModel = mongoose.model('Chat', chatSchema);

@@ -1,5 +1,7 @@
-// const { resolveInclude } = require('ejs');
-const { User} = require('../models/user');
+
+const { User } = require('../models/user');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const { Company} = require('../models/company');
 
 let userid=0;
@@ -68,7 +70,20 @@ const saveCompany = async (company) => {
 
 };
 
+const getUserByID = async (user_id) => {
+	const user = await User.findById(user_id);
+	return user ? user : null;
+};
 
+const toggleCSSAOnlineStatus = async (user_id, is_online) => {
+	try {
+		const user = await User.findOneAndUpdate({_id: ObjectId(user_id)}, {is_online}, {new: true});
+		return user;
+	} catch (e){
+		return null;
+	}
+
+};
 
 
 
@@ -76,4 +91,9 @@ const saveCompany = async (company) => {
 
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
+
 exports.saveCompany =saveCompany;
+
+exports.getUserByID = getUserByID;
+exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;
+

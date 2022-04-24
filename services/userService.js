@@ -7,10 +7,7 @@ const getUserByEmail = async (email) => {
 
 
 const saveUser = async (user) => {
-
-
 	return userRepository.saveUser(user);
-
 };
 
 const saveCompany = async (company) => {
@@ -22,8 +19,13 @@ const saveCompany = async (company) => {
 
 
 
+const getUserByID = async (user_id) => {
+	return await userRepository.getUserByID(user_id);
+};
 
-
+const toggleCSSAOnlineStatus = async (user_id, is_online) => {
+	return await userRepository.toggleCSSAOnlineStatus(user_id, is_online);
+};
 
 
 
@@ -32,4 +34,9 @@ const saveCompany = async (company) => {
 
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
+
 exports.saveCompany =saveCompany;
+
+exports.getUserByID = getUserByID;
+exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;
+

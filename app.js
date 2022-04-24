@@ -34,9 +34,11 @@ app.use(passport.session({}));
 const homeRouter = require('./routes/home');
 const userRouter = require('./routes/user');
 const chatRouter = require('./routes/chat');
+const chatMessagesRouter = require('./routes/chat-messages');
 app.use('/', homeRouter);
 app.use('/', userRouter);
 app.use('/chats', chatRouter);
+app.use('/chat-messages', chatMessagesRouter);
 
 
 //Set up Socket.io

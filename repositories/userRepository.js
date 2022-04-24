@@ -1,4 +1,6 @@
 const { User } = require('../models/user');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const getUserByEmail = async (email) => {
 	const user = await User.findOne({ email: email });
@@ -32,8 +34,23 @@ const saveUser = async (user) => {
 
 };
 
+const getUserByID = async (user_id) => {
+	const user = await User.findById(user_id);
+	return user ? user : null;
+};
 
+const toggleCSSAOnlineStatus = async (user_id, is_online) => {
+	try {
+		const user = await User.findOneAndUpdate({_id: ObjectId(user_id)}, {is_online}, {new: true});
+		return user;
+	} catch (e){
+		return null;
+	}
+
+};
 
 
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
+exports.getUserByID = getUserByID;
+exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;

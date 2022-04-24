@@ -1,6 +1,8 @@
 const passport = require('../config/passport-config');
 const userService = require('../services/userService');
 
+const sessionHelper = require('../helpers/session-helper');
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -48,6 +50,24 @@ const register = async (req, res) => {
 };
 
 
+const getCurrentUser = async (req, res) => {
+	const user_id = sessionHelper.getUserIDFromSession(req.session);
+
+	if (!user_id) {
+		res.code(404);
+		return;
+	}
+
+	const user = await userService.getUserByID(user_id);
+	if(!user) res.code(404);
+
+	user['password'] = null;
+	if(!user['is_online']) user['is_online'] = false;
+
+	res.json(user);
+};
+
 exports.handleLogin = login;
 exports.handleRegistration = register;
 exports.handleLogout = logout;
+exports.getCurrentUser = getCurrentUser;

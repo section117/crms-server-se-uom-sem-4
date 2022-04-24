@@ -11,7 +11,7 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 			}
 		},
 		{
-			$sort: {_id: -1}
+			$sort: {updated_at: -1}
 		},
 		{
 			$lookup: {

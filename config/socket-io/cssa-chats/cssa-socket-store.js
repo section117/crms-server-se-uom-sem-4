@@ -27,5 +27,12 @@ const removeSocket = (user_id, socket_id) => {
 	return null;
 };
 
+const getSocketsByUserID = (user_id) => {
+	if(socketStore[user_id] && Array.isArray(socketStore[user_id]) )
+		return socketStore[user_id];
+	else return [];
+};
+
 exports.putSocket = putSocket;
 exports.removeSocket = removeSocket;
+exports.getSocketsByUserID = getSocketsByUserID;

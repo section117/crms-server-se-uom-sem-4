@@ -9,12 +9,21 @@ class AllChatsComponent extends React.Component {
 			connection_status: false,
 			is_initial: true,
 			is_online: false,
-			active_chats: [],
+			active_chat_ids: [],
+			active_chats: {},
 			user: null,
-			loaded_chat_messages: [],
-			loaded_chat: null,
+			loaded_chat_id: null,
+			message_send: {
+				is_sending: false
+			},
+			socketio: {
+				socket: null
+			},
 		};
+
 	}
+
+
 
 	render() {
 		return (
@@ -44,84 +53,6 @@ class AllChatsComponent extends React.Component {
 
 						</div>
 						{this.state.is_initial ? this.renderWelcomeScreen() : this.renderMessages()}
-
-						{/*<div className="col-md-8">
-							<div className="settings-tray">
-								<div className="friend-drawer no-gutters friend-drawer--grey">
-									<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="" />
-									<div className="text">
-										<h6>Robo Cop</h6>
-										<p className="text-muted">Layin' down the law since like before Christ...</p>
-									</div>
-									<span className="settings-tray--right">
-                   <i class="material-icons">cached</i>
-                        <i class="material-icons">message</i>
-										<i className="material-icons">menu</i>
-                </span>
-								</div>
-							</div>
-							<div className="chat-panel">
-								<div className="row no-gutters">
-									<div className="col-md-3">
-										<div className="chat-bubble chat-bubble--left">
-											Hello dude!
-										</div>
-									</div>
-								</div>
-								<div className="row no-gutters">
-									<div className="col-md-3 offset-md-9">
-										<div className="chat-bubble chat-bubble--right">
-											Hello dude!
-										</div>
-									</div>
-								</div>
-								<div className="row no-gutters">
-									<div className="col-md-3 offset-md-9">
-										<div className="chat-bubble chat-bubble--right">
-											Hello dude!
-										</div>
-									</div>
-								</div>
-								<div className="row no-gutters">
-									<div className="col-md-3">
-										<div className="chat-bubble chat-bubble--left">
-											Hello dude!
-										</div>
-									</div>
-								</div>
-								<div className="row no-gutters">
-									<div className="col-md-3">
-										<div className="chat-bubble chat-bubble--left">
-											Hello dude!
-										</div>
-									</div>
-								</div>
-								<div className="row no-gutters">
-									<div className="col-md-3">
-										<div className="chat-bubble chat-bubble--left">
-											Hello dude!
-										</div>
-									</div>
-								</div>
-								<div className="row no-gutters">
-									<div className="col-md-3 offset-md-9">
-										<div className="chat-bubble chat-bubble--right">
-											Hello dude!
-										</div>
-									</div>
-								</div>
-								<div className="row">
-									<div className="col-12">
-										<div className="chat-box-tray">
-											 <i class="material-icons">s</i>
-											<input type="text" placeholder="Type your message here..." />
-											 <i class="material-icons">mic</i>
-											<button className="round">send</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>*/}
 					</div>
 				</div>
 			</React.Fragment>
@@ -132,19 +63,34 @@ class AllChatsComponent extends React.Component {
 		let newState = {};
 		const user = await this.getUser();
 		const activeChats = await this.getAllActiveChats();
+		console.log(activeChats);
 		if(user) {
 			newState['is_online'] = user.is_online;
 			newState['user'] = user;
 		}
-		if(activeChats)
-			newState['active_chats'] = activeChats;
+		if(activeChats){
+			//newState['active_chats'] = activeChats;
+			newState['active_chats'] = {};
+			activeChats.forEach(ch => {
+				console.log(ch);
+				newState['active_chats'][ch._id] = ch;
+			});
+			newState['active_chat_ids'] = activeChats.map(ch => ch._id);
+		}
+
 
 		this.setState(newState);
 
 		const socket = io('/cssa-messages',{});
 		socket.on("connect", () => {
 			console.log("Socket IO Connected.");
-			this.setState( {connection_status: true} );
+
+			//Register Event Listeners
+			socket.on('cssa-message-send-response', (arg) => {
+				this.listenCSSASendMessageResponse(arg);
+			});
+
+			this.setState( {connection_status: true, socketio: {socket: socket} } );
 			const engine = socket.io.engine;
 		});
 
@@ -182,24 +128,9 @@ class AllChatsComponent extends React.Component {
 
 		const { active_chats } = this.state;
 
-		let selected_chat;
-		const modified_chats = active_chats.map((chat, index) => {
-			let c = {...chat};
-			if(chat._id === chat_id) {
-				selected_chat = chat;
-				c['selected'] = true;
-			}else{
-				c['selected'] = false;
-			}
-			return c;
-		});
-
-
 		this.setState({
-			active_chats: modified_chats,
 			is_initial: false,
-			loaded_chat: selected_chat,
-			loaded_chat_messages: selected_chat.chat_messages,
+			loaded_chat_id: chat_id,
 		});
 	};
 
@@ -212,6 +143,122 @@ class AllChatsComponent extends React.Component {
 			return null;
 		}
 	};
+
+	sortChatIDsByUpdateTimestamp = (chatIds, active_chats) => {
+		chatIds = [...chatIds];
+		chatIds.sort((a,b) => {
+			a = new Date(active_chats[a]['updated_at']);
+			b = new Date(active_chats[b]['updated_at']);
+
+			if (a > b) {
+				return -1;
+			}
+			if (a < b) {
+				return 1;
+			}
+			return 0;
+		});
+
+		console.log(chatIds);
+		return chatIds;
+	};
+
+	inputMessage = (event) => {
+		const {loaded_chat_id, active_chats} = this.state;
+
+		const value = event.target.value;
+		const newState = {'active_chats': {...active_chats}};
+		newState['active_chats'][loaded_chat_id]['input_value'] = value;
+
+		this.setState(newState);
+	};
+
+	sendMessage = () => {
+		const { loaded_chat_id, active_chats} = this.state;
+
+		const current_chat = active_chats[loaded_chat_id];
+
+		const message = current_chat.input_value ? current_chat.input_value : '';
+
+		const data = {
+			message,
+			chat_id: loaded_chat_id
+		}
+
+		this.emitCSSASendMessage(data);
+
+		this.setState({
+			message_send: {
+				is_sending: true
+			}
+		});
+	};
+
+	acknowledgeCSSASendMessage = (response) => {
+		if(response.status === 'FAILED')
+			console.log("Send Failed.");
+
+		const { chatMessage, chat: updatedChat } = response;
+		let newState = {};
+		const {message_send, active_chats, active_chat_ids} = this.state;
+
+		if(chatMessage) {
+			if (message_send.is_sending) {
+				newState = {
+					message_send: {
+						is_sending: false
+					}
+				}
+			}
+
+			//Add the message to the correct chat
+			newState['active_chats'] = {...active_chats};
+			const chat = newState['active_chats'][chatMessage.chat_id];
+			chat['input_value'] = '';
+			chat['updated_at'] = updatedChat.updated_at;
+			chat['chat_messages'].push(chatMessage);
+
+			newState['active_chat_ids'] = this.sortChatIDsByUpdateTimestamp(active_chat_ids, newState['active_chats']);
+
+			this.setState(newState);
+		}
+	}
+
+
+	//Start - SocketIO Events and EventListeners
+	emitCSSASendMessage = (message) => {
+		const {socketio} = this.state;
+
+		socketio.socket.emit('cssa-message-send', message, this.acknowledgeCSSASendMessage);
+	}
+
+	listenCSSASendMessageResponse = (res) => {
+		const { chatMessage, chat: updatedChat } = res;
+		let newState = {};
+		const {message_send, active_chats, active_chat_ids} = this.state;
+
+		if(chatMessage) {
+			if (message_send.is_sending) {
+				newState = {
+					message_send: {
+						is_sending: false
+					}
+				}
+			}
+
+			//Add the message to the correct chat
+			newState['active_chats'] = {...active_chats};
+			const chat = newState['active_chats'][chatMessage.chat_id];
+			chat['updated_at'] = updatedChat.updated_at;
+			chat['chat_messages'].push(chatMessage);
+
+			newState['active_chat_ids'] = this.sortChatIDsByUpdateTimestamp(active_chat_ids, newState['active_chats']);
+
+			this.setState(newState);
+		}
+	};
+
+	//End - SocketIO Events and EventListeners
 
 	renderWelcomeScreen = () => {
 		const {user} = this.state;
@@ -238,13 +285,16 @@ class AllChatsComponent extends React.Component {
 
 	renderMessages = () => {
 
-		const { loaded_chat, loaded_chat_messages } = this.state;
 
+		const { loaded_chat_id, active_chats, message_send } = this.state;
+
+		const loaded_chat = active_chats[loaded_chat_id];
+		const loaded_chat_messages = active_chats[loaded_chat_id]['chat_messages'];
 		const chatMessages = loaded_chat_messages.map((cm, index) => {
 			//left
 			if(cm.is_incoming) {
 				return (
-					<div className="row no-gutters">
+					<div key={cm._id} className="row no-gutters">
 						<div className="col-md-3">
 							<div className="chat-bubble chat-bubble--left">
 								{cm.message}
@@ -255,7 +305,7 @@ class AllChatsComponent extends React.Component {
 			} else {
 				//right
 				return (
-					<div className="row no-gutters">
+					<div key={cm._id} className="row no-gutters">
 						<div className="col-md-3 offset-md-9">
 							<div className="chat-bubble chat-bubble--right">
 								{cm.message}
@@ -290,9 +340,9 @@ class AllChatsComponent extends React.Component {
 						<div className="col-12">
 							<div className="chat-box-tray">
 								<i className="material-icons">s</i>
-								<input type="text" placeholder="Type your message here..."/>
+								<input onChange={this.inputMessage} type="text" value={loaded_chat.input_value ? loaded_chat.input_value : ''} placeholder="Type your message here..."/>
 								<i className="material-icons">mic</i>
-								<button className="round">send</button>
+								<button onClick={this.sendMessage} disabled={message_send.is_sending} className="round">Send</button>
 							</div>
 						</div>
 					</div>
@@ -302,14 +352,15 @@ class AllChatsComponent extends React.Component {
 	};
 
 	renderChats = () => {
-		const {active_chats} = this.state;
+		const {active_chats, active_chat_ids, loaded_chat_id} = this.state;
 
 		let view;
 
-		view = active_chats.map((chat,index) => {
+		view = active_chat_ids.map((chat_id,index) => {
+			const chat = active_chats[chat_id];
 			return (
 				<React.Fragment key={chat._id}>
-					<div className={chat.selected ? 'friend-drawer friend-drawer--onselected' : 'friend-drawer friend-drawer--onhover'} onClick={() => this.loadChat(chat._id)}>
+					<div className={chat._id === loaded_chat_id ? 'friend-drawer friend-drawer--onselected' : 'friend-drawer friend-drawer--onhover'} onClick={() => this.loadChat(chat._id)}>
 						<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="" />
 						<div className="text">
 							<h6>{chat.customer_name}</h6>

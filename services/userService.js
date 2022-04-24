@@ -13,6 +13,14 @@ const saveUser = async (user) => {
 
 };
 
+const saveCompany = async (company) => {
+
+
+	return userRepository.saveCompany(company);
+
+};
+
+
 
 
 
@@ -24,3 +32,4 @@ const saveUser = async (user) => {
 
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
+exports.saveCompany =saveCompany;

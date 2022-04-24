@@ -26,4 +26,15 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 	return chats;
 };
 
+const closeChat = async (chat_id) => {
+	try{
+		const chat = Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {status: 'CLOSED'}, {new: true});
+		return chat;
+	} catch (e) {
+		return null;
+	}
+
+};
+
 exports.getChatsOfCSSAWithMessages= getChatsOfCSSAWithMessages;
+exports.closeChat = closeChat;

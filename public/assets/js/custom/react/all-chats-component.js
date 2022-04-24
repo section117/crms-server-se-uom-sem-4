@@ -113,6 +113,10 @@ class AllChatsComponent extends React.Component {
 			this.listenToggleOnlineStatus(arg);
 		});
 
+		socket.on('cssa-close-chat-response', response => {
+			this.listenCloseChatResponse(response);
+		})
+
 
 	}
 
@@ -214,6 +218,10 @@ class AllChatsComponent extends React.Component {
 		});
 	};
 
+	closeChat = (chat_id) => {
+		this.emitCloseChat({chat_id});
+	};
+
 
 	//Start - SocketIO Events and EventListeners and Acknowledgements
 	emitCSSASendMessage = (message, acknowledge) => {
@@ -290,6 +298,32 @@ class AllChatsComponent extends React.Component {
 		});
 	};
 
+	emitCloseChat = (content) => {
+		const {socketio} = this.state;
+
+		socketio.socket.emit('cssa-close-chat', content);
+	};
+
+	listenCloseChatResponse = (response) => {
+		if(response.status === 'OK') {
+			const chat_id = response.chat_id;
+			let { loaded_chat_id, active_chat_ids, active_chats} = this.state;
+
+			active_chat_ids = active_chat_ids.filter(ch => ch !== chat_id);
+			active_chats = {...active_chats};
+			delete active_chats[chat_id];
+			let newState = {
+				active_chat_ids,
+				active_chats
+			}
+			if (loaded_chat_id === chat_id)
+				newState['is_initial'] = true;
+
+			console.log(newState);
+			this.setState(newState);
+		}
+	};
+
 	//End - SocketIO Events and EventListeners
 
 	renderWelcomeScreen = () => {
@@ -359,7 +393,7 @@ class AllChatsComponent extends React.Component {
 							<p className="text-muted">Email - {loaded_chat.customer_email}</p>
 						</div>
 						<span className="settings-tray--right">
-                   			<i className="material-icons">cached</i>
+                   			<i className="material-icons" onClick={() => this.closeChat(loaded_chat._id)}>cached</i>
                         	<i className="material-icons">message</i>
 							<i className="material-icons">menu</i>
                 		</span>

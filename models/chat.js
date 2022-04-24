@@ -87,6 +87,10 @@ const chatSchema = new mongoose.Schema({
 	updated_at: {
 		type: Date,
 		required: true
+	},
+	is_seen_by_cssa: {
+		type: Boolean,
+		required: false
 	}
 });
 

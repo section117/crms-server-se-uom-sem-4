@@ -94,18 +94,25 @@ class AllChatsComponent extends React.Component {
 		socket.on("connect", () => {
 			console.log("Socket IO Connected.");
 
-			//Register Event Listeners
-			socket.on('cssa-message-send-response', (arg) => {
-				this.listenCSSASendMessageResponse(arg);
-			});
-
-			socket.on('cssa-toggle-online-status-response', (arg) => {
-				this.listenToggleOnlineStatus(arg);
-			});
-
 			this.setState( {connection_status: true, socketio: {socket: socket} } );
 			const engine = socket.io.engine;
 		});
+
+		//On Disconnect or Connection Error Event
+		socket.on("connect_error", () => {
+			console.log('connection Error.');
+			this.setState({connection_status: false});
+		});
+
+		//Register Event Listeners
+		socket.on('cssa-message-send-response', (arg) => {
+			this.listenCSSASendMessageResponse(arg);
+		});
+
+		socket.on('cssa-toggle-online-status-response', (arg) => {
+			this.listenToggleOnlineStatus(arg);
+		});
+
 
 	}
 

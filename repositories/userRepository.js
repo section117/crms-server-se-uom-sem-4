@@ -1,6 +1,10 @@
+
 const { User } = require('../models/user');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const { Company} = require('../models/company');
+
+let userid=0;
 
 const getUserByEmail = async (email) => {
 	const user = await User.findOne({ email: email });
@@ -19,14 +23,46 @@ const saveUser = async (user) => {
 		password: user.password
 	});
 
-	console.log(newUser.first_name);
+	userid=newUser.id;
+	// console.log(newUser.id);
 
 	newUser.save((err) => {
 		if (err) {
 			console.log(err);
+			
 			return false;
+			
 		} else {
-			console.log('save successful');
+			console.log('owner save successful');
+			// res.redirect('dashboard');
+			return true;
+		}
+	});
+
+};
+
+
+const saveCompany = async (company) => {
+
+	const newCompany = new Company({
+		company_name:company.company_name,
+		company_email:company.company_email,
+		website:company.website,
+		address:company.address,
+		owner:userid
+		
+	});
+
+	// console.log(newUser.first_name);
+
+	newCompany.save((err) => {
+		if (err) {
+			console.log(err);
+			
+			return false;
+			
+		} else {
+			console.log('company save successful');
 			// res.redirect('dashboard');
 			return true;
 		}
@@ -50,7 +86,14 @@ const toggleCSSAOnlineStatus = async (user_id, is_online) => {
 };
 
 
+
+
+
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
+
+exports.saveCompany =saveCompany;
+
 exports.getUserByID = getUserByID;
 exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;
+

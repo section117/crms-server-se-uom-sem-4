@@ -10,6 +10,14 @@ const saveUser = async (user) => {
 	return userRepository.saveUser(user);
 };
 
+const saveCompany = async (company) => {
+
+
+	return userRepository.saveCompany(company);
+
+};
+
+
 
 const getUserByID = async (user_id) => {
 	return await userRepository.getUserByID(user_id);
@@ -26,5 +34,9 @@ const toggleCSSAOnlineStatus = async (user_id, is_online) => {
 
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
+
+exports.saveCompany =saveCompany;
+
 exports.getUserByID = getUserByID;
 exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;
+

@@ -4,6 +4,7 @@ const userService = require('../services/userService');
 const sessionHelper = require('../helpers/session-helper');
 
 const bcrypt = require('bcrypt');
+const { exist } = require('joi');
 const saltRounds = 10;
 
 const login = passport.authenticate('local', {
@@ -34,15 +35,25 @@ const register = async (req, res) => {
 		// company: req.body.company,
 		password: hashedPassword
 	};
+	
+	const newCompany = {
+		company_name:req.body.company_name,
+		company_email:req.body.company_email,
+		website:req.body.website,
+		address:req.body.address
+		
+		
+	};
 
+	const owner=await userService.saveUser(newUser);
+	const company=await userService.saveCompany(newCompany);
 
-	if (userService.saveUser(newUser)) {
+	if (owner & company) {
 		console.log('registation successful');
 		res.redirect('/');
-	} else {
-		console.log('registation failed');
-	}
-
+		exist;
+	} 
+	res.redirect('/');
 
 
 

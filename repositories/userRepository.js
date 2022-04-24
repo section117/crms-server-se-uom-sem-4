@@ -1,3 +1,4 @@
+const { resolveInclude } = require('ejs');
 const { User } = require('../models/user');
 
 const getUserByEmail = async (email) => {
@@ -22,7 +23,9 @@ const saveUser = async (user) => {
 	newUser.save((err) => {
 		if (err) {
 			console.log(err);
+			
 			return false;
+			
 		} else {
 			console.log('save successful');
 			// res.redirect('dashboard');

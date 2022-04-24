@@ -32,9 +32,11 @@ const register = async (req, res) => {
 		// company: req.body.company,
 		password: hashedPassword
 	};
+	console.log(req.body.user_type);
 
+	const confirm=await userService.saveUser(newUser);
 
-	if (userService.saveUser(newUser)) {
+	if (confirm) {
 		console.log('registation successful');
 		res.redirect('/');
 	} else {

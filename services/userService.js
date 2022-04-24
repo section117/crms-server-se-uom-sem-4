@@ -15,6 +15,10 @@ const getUserByID = async (user_id) => {
 	return await userRepository.getUserByID(user_id);
 };
 
+const toggleCSSAOnlineStatus = async (user_id, is_online) => {
+	return await userRepository.toggleCSSAOnlineStatus(user_id, is_online);
+};
+
 
 
 
@@ -23,3 +27,4 @@ const getUserByID = async (user_id) => {
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
 exports.getUserByID = getUserByID;
+exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;

@@ -59,6 +59,15 @@ class AllChatsComponent extends React.Component {
 		);
 	}
 
+	componentDidMount() {
+		//Update the component every one minute so the relative times will update
+		this.interval = setInterval(() => this.setState({ }), 60000);
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
+	}
+
 	async componentDidMount() {
 		let newState = {};
 		const user = await this.getUser();
@@ -90,6 +99,10 @@ class AllChatsComponent extends React.Component {
 				this.listenCSSASendMessageResponse(arg);
 			});
 
+			socket.on('cssa-toggle-online-status-response', (arg) => {
+				this.listenToggleOnlineStatus(arg);
+			});
+
 			this.setState( {connection_status: true, socketio: {socket: socket} } );
 			const engine = socket.io.engine;
 		});
@@ -117,9 +130,9 @@ class AllChatsComponent extends React.Component {
 	};
 
 	toggleOnlineStatus = () => {
-		this.setState(
-			{is_online: !this.state.is_online}
-		);
+		const {is_online, user} = this.state;
+
+		this.emitToggleOnlineStatus({is_online: !is_online, user_id: user._id});
 
 	};
 
@@ -185,13 +198,47 @@ class AllChatsComponent extends React.Component {
 			chat_id: loaded_chat_id
 		}
 
-		this.emitCSSASendMessage(data);
+		this.emitCSSASendMessage(data, this.acknowledgeCSSASendMessage);
 
 		this.setState({
 			message_send: {
 				is_sending: true
 			}
 		});
+	};
+
+
+	//Start - SocketIO Events and EventListeners and Acknowledgements
+	emitCSSASendMessage = (message, acknowledge) => {
+		const {socketio} = this.state;
+
+		socketio.socket.emit('cssa-message-send', message, acknowledge);
+	}
+
+	listenCSSASendMessageResponse = (res) => {
+		const { chatMessage, chat: updatedChat } = res;
+		let newState = {};
+		const {message_send, active_chats, active_chat_ids} = this.state;
+
+		if(chatMessage) {
+			if (message_send.is_sending) {
+				newState = {
+					message_send: {
+						is_sending: false
+					}
+				}
+			}
+
+			//Add the message to the correct chat
+			newState['active_chats'] = {...active_chats};
+			const chat = newState['active_chats'][chatMessage.chat_id];
+			chat['updated_at'] = updatedChat.updated_at;
+			chat['chat_messages'].push(chatMessage);
+
+			newState['active_chat_ids'] = this.sortChatIDsByUpdateTimestamp(active_chat_ids, newState['active_chats']);
+
+			this.setState(newState);
+		}
 	};
 
 	acknowledgeCSSASendMessage = (response) => {
@@ -224,38 +271,16 @@ class AllChatsComponent extends React.Component {
 		}
 	}
 
-
-	//Start - SocketIO Events and EventListeners
-	emitCSSASendMessage = (message) => {
+	emitToggleOnlineStatus = (newStatus) => {
 		const {socketio} = this.state;
 
-		socketio.socket.emit('cssa-message-send', message, this.acknowledgeCSSASendMessage);
-	}
+		socketio.socket.emit('cssa-toggle-online-status', newStatus);
+	};
 
-	listenCSSASendMessageResponse = (res) => {
-		const { chatMessage, chat: updatedChat } = res;
-		let newState = {};
-		const {message_send, active_chats, active_chat_ids} = this.state;
-
-		if(chatMessage) {
-			if (message_send.is_sending) {
-				newState = {
-					message_send: {
-						is_sending: false
-					}
-				}
-			}
-
-			//Add the message to the correct chat
-			newState['active_chats'] = {...active_chats};
-			const chat = newState['active_chats'][chatMessage.chat_id];
-			chat['updated_at'] = updatedChat.updated_at;
-			chat['chat_messages'].push(chatMessage);
-
-			newState['active_chat_ids'] = this.sortChatIDsByUpdateTimestamp(active_chat_ids, newState['active_chats']);
-
-			this.setState(newState);
-		}
+	listenToggleOnlineStatus = (response) => {
+		this.setState({
+			is_online: response.is_online
+		});
 	};
 
 	//End - SocketIO Events and EventListeners
@@ -366,7 +391,7 @@ class AllChatsComponent extends React.Component {
 							<h6>{chat.customer_name}</h6>
 							<p className="text-muted">{chat.title_question}</p>
 						</div>
-						<span className="time text-muted small">10:10</span>
+						<span className="time text-muted small">{moment(chat.updated_at).fromNow()}</span>
 					</div>
 					<hr />
 				</React.Fragment>

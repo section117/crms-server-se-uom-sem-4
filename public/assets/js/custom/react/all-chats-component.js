@@ -20,6 +20,12 @@ class AllChatsComponent extends React.Component {
 				socket: null
 			},
 		};
+		this.custom_data = {
+			typing_indicator: {
+				throttle_time: 1000, //millie seconds
+				can_publish: true,
+			}
+		}
 
 	}
 
@@ -237,6 +243,19 @@ class AllChatsComponent extends React.Component {
 		this.emitCloseChat({chat_id});
 	};
 
+	publishTypingIndicator = () => {
+		if(this.custom_data.typing_indicator.can_publish) {
+			const { loaded_chat_id } = this.state;
+			this.emitCSSATypingIndicator({chat_id: loaded_chat_id});
+
+			this.custom_data.typing_indicator.can_publish = false;
+			setTimeout(() => {
+				this.custom_data.typing_indicator.can_publish = true;
+			}, this.custom_data.typing_indicator.throttle_time);
+		}
+
+	};
+
 
 	//Start - SocketIO Events and EventListeners and Acknowledgements
 	emitCSSASendMessage = (message, acknowledge) => {
@@ -362,6 +381,12 @@ class AllChatsComponent extends React.Component {
 		}
 	};
 
+	emitCSSATypingIndicator = (content) => {
+		const {socketio} = this.state;
+
+		socketio.socket.emit('cssa-typing-indicator-publish', content);
+	};
+
 	//End - SocketIO Events and EventListeners
 
 	determineChatClass = (chat) => {
@@ -458,7 +483,7 @@ class AllChatsComponent extends React.Component {
 						<div className="col-12">
 							<div className="chat-box-tray">
 								<i className="material-icons">s</i>
-								<input onChange={this.inputMessage} type="text" value={loaded_chat.input_value ? loaded_chat.input_value : ''} placeholder="Type your message here..."/>
+								<input onChange={this.inputMessage} onKeyUp={this.publishTypingIndicator} type="text" value={loaded_chat.input_value ? loaded_chat.input_value : ''} placeholder="Type your message here..."/>
 								<i className="material-icons">mic</i>
 								<button onClick={this.sendMessage} disabled={message_send.is_sending} className="round">Send</button>
 							</div>

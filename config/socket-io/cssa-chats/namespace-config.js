@@ -68,6 +68,10 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 			}
 		});
 
+		socket.on('cssa-typing-indicator-publish', (arg) => {
+			console.log(arg);
+		});
+
 		//Add socket to the SocketStore
 		putSocket(user_id, socket);
 	});

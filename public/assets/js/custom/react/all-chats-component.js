@@ -20,6 +20,12 @@ class AllChatsComponent extends React.Component {
 				socket: null
 			},
 		};
+		this.custom_data = {
+			typing_indicator: {
+				throttle_time: 1000, //millie seconds
+				can_publish: true,
+			}
+		}
 
 	}
 
@@ -113,6 +119,14 @@ class AllChatsComponent extends React.Component {
 			this.listenToggleOnlineStatus(arg);
 		});
 
+		socket.on('cssa-close-chat-response', response => {
+			this.listenCloseChatResponse(response);
+		})
+
+		socket.on('cssa-chat-seen-response', response => {
+			this.listenCSSAChatSeenResponse(response);
+		});
+
 
 	}
 
@@ -144,14 +158,25 @@ class AllChatsComponent extends React.Component {
 	};
 
 	loadChat = async (chat_id) => {
-		console.log(chat_id);
-
-		const { active_chats } = this.state;
-
-		this.setState({
+		const newState = {
 			is_initial: false,
 			loaded_chat_id: chat_id,
-		});
+		};
+
+		let { active_chats } = this.state;
+		let chat = active_chats[chat_id];
+		if(!chat.is_seen_by_cssa) {
+			active_chats = {...active_chats};
+			chat = {...chat};
+			chat.is_seen_by_cssa = true;
+			active_chats[chat_id] = chat;
+			newState['active_chats'] = active_chats;
+
+			//notify Others
+			this.emitCSSAChatSeen({chat_id});
+		}
+
+		this.setState(newState);
 	};
 
 	loadChatMessagesByChatID = async (chat_id) => {
@@ -212,6 +237,23 @@ class AllChatsComponent extends React.Component {
 				is_sending: true
 			}
 		});
+	};
+
+	closeChat = (chat_id) => {
+		this.emitCloseChat({chat_id});
+	};
+
+	publishTypingIndicator = () => {
+		if(this.custom_data.typing_indicator.can_publish) {
+			const { loaded_chat_id } = this.state;
+			this.emitCSSATypingIndicator({chat_id: loaded_chat_id});
+
+			this.custom_data.typing_indicator.can_publish = false;
+			setTimeout(() => {
+				this.custom_data.typing_indicator.can_publish = true;
+			}, this.custom_data.typing_indicator.throttle_time);
+		}
+
 	};
 
 
@@ -290,7 +332,76 @@ class AllChatsComponent extends React.Component {
 		});
 	};
 
+	emitCloseChat = (content) => {
+		const {socketio} = this.state;
+
+		socketio.socket.emit('cssa-close-chat', content);
+	};
+
+	listenCloseChatResponse = (response) => {
+		if(response.status === 'OK') {
+			const chat_id = response.chat_id;
+			let { loaded_chat_id, active_chat_ids, active_chats} = this.state;
+
+			active_chat_ids = active_chat_ids.filter(ch => ch !== chat_id);
+			active_chats = {...active_chats};
+			delete active_chats[chat_id];
+			let newState = {
+				active_chat_ids,
+				active_chats
+			}
+			if (loaded_chat_id === chat_id)
+				newState['is_initial'] = true;
+
+			console.log(newState);
+			this.setState(newState);
+		}
+	};
+
+	emitCSSAChatSeen = (content) => {
+		const {socketio} = this.state;
+
+		socketio.socket.emit('cssa-chat-seen', content);
+	};
+
+	listenCSSAChatSeenResponse = (response) => {
+		const { status, chat } = response;
+		if(status === 'OK') {
+			let { active_chats } = this.state;
+			active_chats = {...active_chats};
+			let old_chat = active_chats[chat._id];
+			let chatMessages = old_chat['chat_messages'];
+			chatMessages = [...chatMessages];
+			chat.input_value = old_chat.input_value;
+			chat.chat_messages = chatMessages;
+
+			active_chats[chat._id] = chat;
+
+			this.setState({active_chats});
+		}
+	};
+
+	emitCSSATypingIndicator = (content) => {
+		const {socketio} = this.state;
+
+		socketio.socket.emit('cssa-typing-indicator-publish', content);
+	};
+
 	//End - SocketIO Events and EventListeners
+
+	determineChatClass = (chat) => {
+		const { loaded_chat_id } = this.state;
+		let className = 'friend-drawer ';
+		if(chat._id === loaded_chat_id) {
+			className += 'friend-drawer--onselected';
+		} else if (!chat.is_seen_by_cssa) {
+			className += 'friend-drawer--onnewchats';
+		} else {
+			className += 'friend-drawer--onhover';
+		}
+
+		return className;
+	};
 
 	renderWelcomeScreen = () => {
 		const {user} = this.state;
@@ -359,7 +470,7 @@ class AllChatsComponent extends React.Component {
 							<p className="text-muted">Email - {loaded_chat.customer_email}</p>
 						</div>
 						<span className="settings-tray--right">
-                   			<i className="material-icons">cached</i>
+                   			<i className="material-icons" onClick={() => this.closeChat(loaded_chat._id)}>cached</i>
                         	<i className="material-icons">message</i>
 							<i className="material-icons">menu</i>
                 		</span>
@@ -372,7 +483,7 @@ class AllChatsComponent extends React.Component {
 						<div className="col-12">
 							<div className="chat-box-tray">
 								<i className="material-icons">s</i>
-								<input onChange={this.inputMessage} type="text" value={loaded_chat.input_value ? loaded_chat.input_value : ''} placeholder="Type your message here..."/>
+								<input onChange={this.inputMessage} onKeyUp={this.publishTypingIndicator} type="text" value={loaded_chat.input_value ? loaded_chat.input_value : ''} placeholder="Type your message here..."/>
 								<i className="material-icons">mic</i>
 								<button onClick={this.sendMessage} disabled={message_send.is_sending} className="round">Send</button>
 							</div>
@@ -392,10 +503,10 @@ class AllChatsComponent extends React.Component {
 			const chat = active_chats[chat_id];
 			return (
 				<React.Fragment key={chat._id}>
-					<div className={chat._id === loaded_chat_id ? 'friend-drawer friend-drawer--onselected' : 'friend-drawer friend-drawer--onhover'} onClick={() => this.loadChat(chat._id)}>
+					<div className={this.determineChatClass(chat)} onClick={() => this.loadChat(chat._id)}>
 						<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="" />
 						<div className="text">
-							<h6>{chat.customer_name}</h6>
+							<h6>{chat.customer_name} {!chat.is_seen_by_cssa ? <span className="badge badge-success">New</span> : ''}</h6>
 							<p className="text-muted">{chat.title_question}</p>
 						</div>
 						<span className="time text-muted small">{moment(chat.updated_at).fromNow()}</span>

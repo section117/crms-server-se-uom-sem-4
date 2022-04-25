@@ -3,6 +3,7 @@ const {getUserFromSession, getUserIDFromSession} = require('../../../helpers/ses
 const { putSocket, removeSocket, getSocketsByUserID } = require('./cssa-socket-store');
 const { cssaSendMessage } = require('../../../services/chatMessagesService');
 const { toggleCSSAOnlineStatus } = require('../../../services/userService');
+const { closeChat, markChatSeenByCSSA } = require('../../../services/chatService');
 
 const createAndConfigureCSSAMessagesNamespace = (io) => {
 	const cssaChatsWSNamespace = io.of('/cssa-messages');
@@ -47,6 +48,30 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 
 		});
 
+		socket.on('cssa-close-chat', async (arg) => {
+			const {chat_id} = arg;
+			const result = await closeChat(chat_id);
+			let response = {
+				chat_id
+			};
+			if(result)
+				response['status'] = 'OK';
+			else response['status'] = 'FAILED';
+			emitCSSACloseChatResponse(response, user_id);
+		});
+
+		socket.on('cssa-chat-seen', async (arg) => {
+			const {chat_id} = arg;
+			const newChat = await markChatSeenByCSSA(chat_id);
+			if(newChat) {
+				emitCSSAChatSeenResponse({chat: newChat, status: 'OK'}, user_id, socket.id);
+			}
+		});
+
+		socket.on('cssa-typing-indicator-publish', (arg) => {
+			console.log(arg);
+		});
+
 		//Add socket to the SocketStore
 		putSocket(user_id, socket);
 	});
@@ -83,7 +108,15 @@ const emitCSSASendMessageResponse = (chatMessage, chat, user_id, current_socket_
 
 const emitCSSAoggleOnlineStatusResponse = (is_online, user_id) => {
 	emitEventByUserID('cssa-toggle-online-status-response', {is_online}, user_id, null);
-}
+};
+
+const emitCSSACloseChatResponse = (response, user_id) => {
+	emitEventByUserID('cssa-close-chat-response', response, user_id, null);
+};
+
+const emitCSSAChatSeenResponse = (content, user_id, current_socket_id) => {
+	emitEventByUserID('cssa-chat-seen-response', content, user_id, current_socket_id);
+};
 
 const validateConnection = (user, socket) => {
 	if(!(user !== null && user.user_type && user.user_type === 'CSSA'))

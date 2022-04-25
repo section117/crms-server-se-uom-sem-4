@@ -90,7 +90,7 @@ const chatSchema = new mongoose.Schema({
 	},
 	is_seen_by_cssa: {
 		type: Boolean,
-		required: false
+		required: true
 	}
 });
 

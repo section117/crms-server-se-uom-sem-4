@@ -117,6 +117,10 @@ class AllChatsComponent extends React.Component {
 			this.listenCloseChatResponse(response);
 		})
 
+		socket.on('cssa-chat-seen-response', response => {
+			this.listenCSSAChatSeenResponse(response);
+		});
+
 
 	}
 
@@ -148,14 +152,25 @@ class AllChatsComponent extends React.Component {
 	};
 
 	loadChat = async (chat_id) => {
-		console.log(chat_id);
-
-		const { active_chats } = this.state;
-
-		this.setState({
+		const newState = {
 			is_initial: false,
 			loaded_chat_id: chat_id,
-		});
+		};
+
+		let { active_chats } = this.state;
+		let chat = active_chats[chat_id];
+		if(!chat.is_seen_by_cssa) {
+			active_chats = {...active_chats};
+			chat = {...chat};
+			chat.is_seen_by_cssa = true;
+			active_chats[chat_id] = chat;
+			newState['active_chats'] = active_chats;
+
+			//notify Others
+			this.emitCSSAChatSeen({chat_id});
+		}
+
+		this.setState(newState);
 	};
 
 	loadChatMessagesByChatID = async (chat_id) => {
@@ -324,7 +339,44 @@ class AllChatsComponent extends React.Component {
 		}
 	};
 
+	emitCSSAChatSeen = (content) => {
+		const {socketio} = this.state;
+
+		socketio.socket.emit('cssa-chat-seen', content);
+	};
+
+	listenCSSAChatSeenResponse = (response) => {
+		const { status, chat } = response;
+		if(status === 'OK') {
+			let { active_chats } = this.state;
+			active_chats = {...active_chats};
+			let old_chat = active_chats[chat._id];
+			let chatMessages = old_chat['chat_messages'];
+			chatMessages = [...chatMessages];
+			chat.input_value = old_chat.input_value;
+			chat.chat_messages = chatMessages;
+
+			active_chats[chat._id] = chat;
+
+			this.setState({active_chats});
+		}
+	};
+
 	//End - SocketIO Events and EventListeners
+
+	determineChatClass = (chat) => {
+		const { loaded_chat_id } = this.state;
+		let className = 'friend-drawer ';
+		if(chat._id === loaded_chat_id) {
+			className += 'friend-drawer--onselected';
+		} else if (!chat.is_seen_by_cssa) {
+			className += 'friend-drawer--onnewchats';
+		} else {
+			className += 'friend-drawer--onhover';
+		}
+
+		return className;
+	};
 
 	renderWelcomeScreen = () => {
 		const {user} = this.state;
@@ -426,10 +478,10 @@ class AllChatsComponent extends React.Component {
 			const chat = active_chats[chat_id];
 			return (
 				<React.Fragment key={chat._id}>
-					<div className={chat._id === loaded_chat_id ? 'friend-drawer friend-drawer--onselected' : 'friend-drawer friend-drawer--onhover'} onClick={() => this.loadChat(chat._id)}>
+					<div className={this.determineChatClass(chat)} onClick={() => this.loadChat(chat._id)}>
 						<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="" />
 						<div className="text">
-							<h6>{chat.customer_name}</h6>
+							<h6>{chat.customer_name} {!chat.is_seen_by_cssa ? <span className="badge badge-success">New</span> : ''}</h6>
 							<p className="text-muted">{chat.title_question}</p>
 						</div>
 						<span className="time text-muted small">{moment(chat.updated_at).fromNow()}</span>

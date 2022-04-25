@@ -28,7 +28,7 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 
 const closeChat = async (chat_id) => {
 	try{
-		const chat = Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {status: 'CLOSED'}, {new: true});
+		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {status: 'CLOSED'}, {new: true});
 		return chat;
 	} catch (e) {
 		return null;
@@ -36,5 +36,15 @@ const closeChat = async (chat_id) => {
 
 };
 
+const markChatSeenByCSSA = async (chat_id) => {
+	try {
+		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {is_seen_by_cssa: true}, {new: true});
+		return chat;
+	}catch (e){
+		return null;
+	}
+};
+
 exports.getChatsOfCSSAWithMessages= getChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
+exports.markChatSeenByCSSA = markChatSeenByCSSA;

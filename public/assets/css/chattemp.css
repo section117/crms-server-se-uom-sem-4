@@ -108,6 +108,20 @@ body {
   color: #fff !important;
 }
 
+.friend-drawer--onnewchats {
+  background: rgba(146, 170, 234, 0.4);
+  cursor: pointer;
+}
+.friend-drawer--onnewchats:hover {
+  background: #74b9ff;
+  cursor: pointer;
+}
+.friend-drawer--onnewchats:hover p,
+.friend-drawer--onnewchats:hover h6,
+.friend-drawer--onnewchats:hover .time {
+  color: #fff !important;
+}
+
   hr {
     margin: 5px auto;
     width: 60%;

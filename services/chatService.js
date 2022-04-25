@@ -9,5 +9,10 @@ const closeChat = async (chat_id) => {
 	return await chatRepository.closeChat(chat_id);
 };
 
+const markChatSeenByCSSA = async (chat_id) => {
+	return await chatRepository.markChatSeenByCSSA(chat_id);
+};
+
 exports.getActiveChatsOfCSSAWithMessages = getActiveChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
+exports.markChatSeenByCSSA =markChatSeenByCSSA;

@@ -5,4 +5,10 @@ const getActiveChatsOfCSSAWithMessages = async (user_id) => {
 	return await chatRepository.getChatsOfCSSAWithMessages(user_id, 'ACTIVE');
 };
 
+//create a new chat
+const createNewChat = async (data) => {
+	return await  chatRepository.initNewChats(data.name, data.email, data.title_ques,data.company_id);
+}
+
 exports.getActiveChatsOfCSSAWithMessages = getActiveChatsOfCSSAWithMessages;
+exports.createNewChat = createNewChat;

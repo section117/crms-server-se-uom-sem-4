@@ -11,10 +11,7 @@ const saveUser = async (user) => {
 };
 
 const saveCompany = async (company) => {
-
-
 	return userRepository.saveCompany(company);
-
 };
 
 

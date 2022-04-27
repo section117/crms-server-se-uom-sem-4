@@ -22,8 +22,6 @@ const logout = (req, res) => {
 //temporarily removed the company name
 const register = async (req, res) => {
 
-
-
 	//with bcrypt
 	const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
@@ -32,7 +30,6 @@ const register = async (req, res) => {
 		last_name: req.body.last_name,
 		email: req.body.email,
 		user_type: req.body.user_type,
-		// company: req.body.company,
 		password: hashedPassword
 	};
 	
@@ -41,14 +38,12 @@ const register = async (req, res) => {
 		company_email:req.body.company_email,
 		website:req.body.website,
 		address:req.body.address
-		
-		
 	};
 
-	const owner=await userService.saveUser(newUser);
 	const company=await userService.saveCompany(newCompany);
+	const owner=await userService.saveUser(newUser);
 
-	if (owner & company) {
+	if (owner && company) {
 		console.log('registation successful');
 		res.redirect('/');
 		exist;

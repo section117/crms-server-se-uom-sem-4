@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { Company} = require('../models/company');
 
-let userid=0;
+let company_id = null;
 
 const getUserByEmail = async (email) => {
 	const user = await User.findOne({ email: email });
@@ -19,12 +19,11 @@ const saveUser = async (user) => {
 		last_name: user.last_name,
 		email: user.email,
 		user_type: user.user_type,
-		// company: req.body.company,
-		password: user.password
+		password: user.password,
+		company : company_id
 	});
 
-	userid=newUser.id;
-	// console.log(newUser.id);
+	
 
 	newUser.save((err) => {
 		if (err) {
@@ -49,12 +48,11 @@ const saveCompany = async (company) => {
 		company_email:company.company_email,
 		website:company.website,
 		address:company.address,
-		owner:userid
-		
 	});
 
-	// console.log(newUser.first_name);
-
+	company_id = newCompany._id;
+	console.log(company_id);
+	
 	newCompany.save((err) => {
 		if (err) {
 			console.log(err);

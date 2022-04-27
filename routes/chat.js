@@ -11,6 +11,7 @@ router.get('/', authMiddleware.ensureAuthenticated, chatsController.viewAllChats
 router.get('/active-chats-cssa', authMiddleware.ensureAuthenticated, chatsController.getActiveChatsOfCSSA);
 
 //REST Endpoints for React Chat plugin
-router.post('/init-chat', chatsController.createNewChat)
+//endpoint for creating new chat
+router.post('/init-chat', chatsController.createNewChat);
 
 module.exports = router;

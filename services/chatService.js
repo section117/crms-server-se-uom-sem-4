@@ -7,7 +7,7 @@ const getActiveChatsOfCSSAWithMessages = async (user_id) => {
 
 //create a new chat
 const createNewChat = async (data) => {
-	return await  chatRepository.initNewChats(data.name, data.email, data.title_ques,data.company_id);
+	return await chatRepository.initNewChats(data.name, data.email, data.title_question,data.company_id);
 }
 
 //check validity if chat

@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const getAllChatMessagesByChatID = async (chat_id) => {
 	const chatMessages = await ChatMessage
-		.find({chat: chat_id})
+		.find({chat_id: chat_id})
 		.sort({_id: 1});
 
 	return chatMessages;

@@ -11,5 +11,5 @@ router.get('/get/:chat_id', authMiddleware.ensureAuthenticated, chatMessagesCont
 
 
 //endpoint for get all the messages for a given chat
-router.get('/:id', chatMessagesController.getAllChatMessages)
+router.get('/:chat_id', chatMessagesController.getAllChatMessages)
 module.exports = router;

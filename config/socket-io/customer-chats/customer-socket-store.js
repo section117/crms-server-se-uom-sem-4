@@ -2,7 +2,6 @@
 const socketStore = {};
 
 const putSocket = (chat_id, socket) => {
-	// console.log("socket store: ", socketStore);
 	if(!chat_id) return;
 	if(socketStore[chat_id] && Array.isArray(socketStore[chat_id])) {
 		socketStore[chat_id].push(socket);

@@ -4,44 +4,48 @@ const {customerSendMessage} = require('../../../services/chatMessagesService');
 const {getSocketsByUserID} = require('../cssa-chats/cssa-socket-store');
 
 
-let chatId;
+
 
 const createAndConfigureCustomerChatsNamespace = (io) => {
 	const customerChatsWSNamespace = io.of('/customer-messages');
 
-
 	customerChatsWSNamespace.on('connection', (socket) => {
 
-		// console.log('socket-id : ', socket.id);
+		let chatID = socket.handshake.query.chatID;
+
+
 
 		//get Chat ID & validate
-		socket.on('send-chat-id', async (chatID) => {
-			chatId = chatID;
-			console.log('socket-id : ', socket.id);
-			const chat = await checkValidityIfChat(chatID);
-			if(!chat) {
-				//TODO: callback function
-				console.log("chat is not available");
-			}else{
-				console.log("chat is available");
-			}
-		});
+		// socket.on('send-chat-id', async (chatID) => {
+		// 	console.log('socket-id : ', socket.id);
+		// 	const chat = await checkValidityIfChat(chatID);
+		// 	if(!chat) {
+		// 		//TODO: callback function
+		// 		console.log("chat is not available");
+		// 	}else{
+		// 		console.log("chat is available");
+		// 	}
+		//
+		// });
 
 
 		//Customer Message Send Listener
 		socket.on('customer-send-message', async message => {
 			console.log(message);
-			const result = await customerSendMessage({message: message, chat_id: chatId})
+			const result = await customerSendMessage({message: message, chat_id: chatID})
 			console.log('chat message: ', result);
 			if(!result) {
 				//TODO: callback function
 				console.log("FAILED");
 			}else {
 				const {chatMessage, chat} = result;
-				sendMessageReceivedResponse(socket, chatId, chatMessage);
+				sendMessageReceivedResponse(socket, chatID, chatMessage);
 				sendMessageToCSSA(io, chat, chatMessage);
 			}
 		});
+
+		//Add socket to the SocketStore
+		putSocket(chatID, socket);
 
 
 		/*
@@ -51,8 +55,9 @@ const createAndConfigureCustomerChatsNamespace = (io) => {
 		* emit message to all relevant cssa sockets
 		* */
 
-		//Add socket to the SocketStore
-		putSocket(chatId, socket);
+
+
+
 
 
 	});

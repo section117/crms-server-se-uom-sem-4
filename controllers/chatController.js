@@ -27,8 +27,8 @@ const createNewChat = async (req, res) => {
 
 	const newChat = await chatService.createNewChat(req.body);
 	console.log(newChat, "hello")
-	if(!newChat) return res.status(202).send("Failed")
-	res.status(200).send("Successfully added")
+	if(!newChat) return res.status(202).send({data: null, status: "Failed"})
+	res.status(200).send({data: newChat, status:"Successfully added"})
 }
 
 exports.viewAllChats = viewAllChats;

@@ -71,6 +71,10 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 
 	return await chat.save();
 }
-
+//check if a given chat is available
+const findChatByID = async chatID => {
+	return await Chat.find({_id : chatID});
+}
 exports.getChatsOfCSSAWithMessages= getChatsOfCSSAWithMessages;
 exports.initNewChats = initNewChat;
+exports.findChatByID = findChatByID;

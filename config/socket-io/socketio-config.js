@@ -7,6 +7,9 @@ let io;
 const createIO = (server) => {
 	io = new Server(server, {
 		serveClient: false,
+		cors: {
+			origin: ["http://localhost:8080"]
+		}
 	});
 
 	//CSSA Messages Namespace

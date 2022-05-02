@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const { createServer } = require('http');
 const morgan = require('morgan');
+const cors = require('cors');
 
 require('dotenv').config();
 
@@ -19,6 +20,11 @@ app.use(express.static('public'));
 
 //Set up Session
 app.use(getExpressSessionStore());
+
+//allow cors
+app.use(cors({
+	origin: ['http://localhost:8080']
+}))
 
 
 //Set up Database

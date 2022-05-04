@@ -127,6 +127,10 @@ class AllChatsComponent extends React.Component {
 			this.listenCSSAChatSeenResponse(response);
 		});
 
+		socket.on('customer-message-send', response => {
+
+		});
+
 
 	}
 
@@ -385,6 +389,25 @@ class AllChatsComponent extends React.Component {
 		const {socketio} = this.state;
 
 		socketio.socket.emit('cssa-typing-indicator-publish', content);
+	};
+
+	listenCustomerMessageSend = response => {
+		const { chatMessage, chat: updatedChat } = response;
+		let newState = {};
+		const { active_chats, active_chat_ids} = this.state;
+
+		if(chatMessage) {
+			//Add the message to the correct chat
+			newState['active_chats'] = {...active_chats};
+			const chat = newState['active_chats'][chatMessage.chat_id];
+			chat['updated_at'] = updatedChat.updated_at;
+			chat['chat_messages'].push(chatMessage);
+
+			newState['active_chat_ids'] = this.sortChatIDsByUpdateTimestamp(active_chat_ids, newState['active_chats']);
+
+			this.setState(newState);
+		}
+
 	};
 
 	//End - SocketIO Events and EventListeners

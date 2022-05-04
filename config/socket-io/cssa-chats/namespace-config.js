@@ -4,6 +4,7 @@ const { putSocket, removeSocket, getSocketsByUserID } = require('./cssa-socket-s
 const { cssaSendMessage } = require('../../../services/chatMessagesService');
 const { toggleCSSAOnlineStatus } = require('../../../services/userService');
 const { closeChat, markChatSeenByCSSA } = require('../../../services/chatService');
+const { sendMessageToCustomer } = require('../message-channel');
 
 const createAndConfigureCSSAMessagesNamespace = (io) => {
 	const cssaChatsWSNamespace = io.of('/cssa-messages');
@@ -37,6 +38,7 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 			const { chatMessage, chat } = result;
 			callback({status: 'OK', chatMessage, chat});
 			emitCSSASendMessageResponse(chatMessage, chat, user_id, socket.id);
+			sendMessageToCustomer(chatMessage, chat._id);
 		});
 
 		socket.on('cssa-toggle-online-status', async (arg) => {
@@ -118,9 +120,14 @@ const emitCSSAChatSeenResponse = (content, user_id, current_socket_id) => {
 	emitEventByUserID('cssa-chat-seen-response', content, user_id, current_socket_id);
 };
 
+const emitCustomerMessageSend = (chat, chatMessage) => {
+	emitEventByUserID('customer-message-send', {chatMessage, chat}, chat.assigned_cssa, null);
+};
+
 const validateConnection = (user, socket) => {
 	if(!(user !== null && user.user_type && user.user_type === 'CSSA'))
 		socket.disconnect(true);
 };
 
 exports.createAndConfigureCSSAMessagesNamespace = createAndConfigureCSSAMessagesNamespace;
+exports.emitCustomerMessageSend = emitCustomerMessageSend;

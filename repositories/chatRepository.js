@@ -27,6 +27,7 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 	return chats;
 };
 
+
 //assign a CSSA to a chat
 const assignCSSA = async (company_id) => {
 	try {
@@ -75,6 +76,30 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 const findChatByID = async chatID => {
 	return await Chat.find({_id : chatID});
 }
+
+
+const closeChat = async (chat_id) => {
+	try{
+		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {status: 'CLOSED'}, {new: true});
+		return chat;
+	} catch (e) {
+		return null;
+	}
+
+};
+
+const markChatSeenByCSSA = async (chat_id) => {
+	try {
+		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {is_seen_by_cssa: true}, {new: true});
+		return chat;
+	}catch (e){
+		return null;
+	}
+};
+
 exports.getChatsOfCSSAWithMessages= getChatsOfCSSAWithMessages;
+exports.closeChat = closeChat;
+exports.markChatSeenByCSSA = markChatSeenByCSSA;
 exports.initNewChats = initNewChat;
 exports.findChatByID = findChatByID;
+

@@ -14,7 +14,7 @@ const getExpressSessionStore = () => {
 			saveUninitialized: false
 		};
 		if (process.env.NODE_ENV === 'production'){
-			session_config.cookie.secure = true;
+			//session_config.cookie.secure = true;
 		} else if (process.env.NODE_ENV === 'development'){
 			//Set Session Store to MongoDBStore instead of MemoryStore
 			session_config.store = new MongoDBStore({

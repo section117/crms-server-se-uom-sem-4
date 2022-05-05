@@ -21,10 +21,10 @@ app.use(express.static('public'));
 //Set up Session
 app.use(getExpressSessionStore());
 
-//allow cors
+//Allow CORS
 app.use(cors({
-	origin: ['http://localhost:8080']
-}))
+	origin: ['*']
+}));
 
 
 //Set up Database

@@ -52,7 +52,7 @@ const saveCompany = async (company) => {
 
 	company_id = newCompany._id;
 	console.log(company_id);
-	
+
 	newCompany.save((err) => {
 		if (err) {
 			console.log(err);
@@ -69,7 +69,7 @@ const saveCompany = async (company) => {
 };
 
 const getUserByID = async (user_id) => {
-	const user = await User.findById(user_id);
+	const user = await User.findById(user_id).populate('company');
 	return user ? user : null;
 };
 
@@ -83,6 +83,9 @@ const toggleCSSAOnlineStatus = async (user_id, is_online) => {
 
 };
 
+const updateUser = async (user_id,user_details)=>{
+	return await User.findByIdAndUpdate(user_id,user_details);
+};
 
 
 
@@ -95,3 +98,4 @@ exports.saveCompany =saveCompany;
 exports.getUserByID = getUserByID;
 exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;
 
+exports.updateUser = updateUser;

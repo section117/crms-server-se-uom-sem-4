@@ -25,7 +25,9 @@ const toggleCSSAOnlineStatus = async (user_id, is_online) => {
 };
 
 
-
+const updateUser = async (user_id,user_details)=>{
+	return await userRepository.updateUser(user_id,user_details);
+};
 
 
 
@@ -37,3 +39,4 @@ exports.saveCompany =saveCompany;
 exports.getUserByID = getUserByID;
 exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;
 
+exports.updateUser = updateUser;

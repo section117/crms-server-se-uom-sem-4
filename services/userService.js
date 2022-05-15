@@ -29,7 +29,9 @@ const updateUser = async (user_id,user_details)=>{
 	return await userRepository.updateUser(user_id,user_details);
 };
 
-
+const updateCompany = async (user_id,company_details)=>{
+	return await userRepository.updateCompany(user_id,company_details);
+};
 
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
@@ -40,3 +42,4 @@ exports.getUserByID = getUserByID;
 exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;
 
 exports.updateUser = updateUser;
+exports.updateCompany = updateCompany;

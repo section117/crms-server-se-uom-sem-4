@@ -87,6 +87,10 @@ const updateUser = async (user_id,user_details)=>{
 	return await User.findByIdAndUpdate(user_id,user_details);
 };
 
+const updateCompany = async (company_id,company_details)=>{
+	return await Company.findByIdAndUpdate(company_id,company_details);
+};
+
 
 
 
@@ -99,3 +103,4 @@ exports.getUserByID = getUserByID;
 exports.toggleCSSAOnlineStatus = toggleCSSAOnlineStatus;
 
 exports.updateUser = updateUser;
+exports.updateCompany = updateCompany;

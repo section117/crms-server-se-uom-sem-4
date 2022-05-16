@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-   <%- include('../components/head.ejs') %> 
+    <%- include('../components/head.ejs') %>
   </head>
 
   <body>
@@ -63,7 +63,9 @@
                   placeholder=""
                   name="currentPassword"
                 />
-                <label class="form-label" for="form3Example4">Current Password</label>
+                <label class="form-label" for="form3Example4"
+                  >Current Password</label
+                >
               </div>
 
               <div class="form-outline mb-4">
@@ -74,18 +76,22 @@
                   placeholder=""
                   name="newPassword"
                 />
-                <label class="form-label" for="form3Example4">New Password</label>
+                <label class="form-label" for="form3Example4"
+                  >New Password</label
+                >
               </div>
 
               <% if (user.user_type === 'COMPANY_OWNER') { %>
-               
-            <hr>
+
+              <hr />
               <br />
               <!-- company details -->
-              <p class="lead fw-normal mb-3 me-3 h3 font-weight-bold">
-                Company Details
-              </p>
-
+              <div class="d-flex justify-content-between">
+                <p class="lead fw-normal mb-3 me-3 h3 font-weight-bold">
+                  Company Details
+                </p>
+                <a href="/manage-cssa" class="btn btn-primary btn-lg">Edit CSSA details</a>
+              </div>
               <div class="form-outline mb-4">
                 <input
                   type="text"
@@ -142,9 +148,8 @@
                   class="btn btn-primary btn-lg"
                   style="padding-left: 2.5rem; padding-right: 2.5rem"
                 >
-                 Update
+                  Update
                 </button>
-                
               </div>
             </form>
           </div>

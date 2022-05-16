@@ -18,7 +18,6 @@ const logout = (req, res) => {
   res.redirect("/");
 };
 
-//temporarily removed the company name
 const register = async (req, res) => {
   //with bcrypt
   const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
@@ -31,20 +30,31 @@ const register = async (req, res) => {
     password: hashedPassword,
   };
 
-  const newCompany = {
-    company_name: req.body.company_name,
-    company_email: req.body.company_email,
-    website: req.body.website,
-    address: req.body.address,
-  };
+  if (newUser.user_type == "COMPANY_OWNER") {
+    const newCompany = {
+      company_name: req.body.company_name,
+      company_email: req.body.company_email,
+      website: req.body.website,
+      address: req.body.address,
+    };
 
-  const company = await userService.saveCompany(newCompany);
-  const owner = await userService.saveUser(newUser);
+    const company = await userService.saveCompany(newCompany);
+    const owner = await userService.saveUser(newUser);
 
-  if (owner && company) {
-    console.log("registation successful");
-    res.redirect("/");
-    exist;
+    if (owner && company) {
+      console.log("registation successful");
+      res.redirect("/");
+      exist;
+    }
+  } else {
+    newUser.company = req.session.passport.user.company;
+    console.log("A CSSA");
+    const cssa = await userService.saveUser(newUser);
+    console.log(cssa);
+    if (cssa) {
+      console.log("registation successful");
+      return res.redirect("/manage-cssa");
+    }
   }
   res.redirect("/");
 };
@@ -85,13 +95,12 @@ const updateUser = async (req, res) => {
     last_name: req.body.last_name,
   };
 
-  const company_details = { 
-	  company_name : req.body.company_name,
-	  company_email : req.body.company_email,
-	  website : req.body.website,
-	  address : req.body.address
-   };
-  
+  const company_details = {
+    company_name: req.body.company_name,
+    company_email: req.body.company_email,
+    website: req.body.website,
+    address: req.body.address,
+  };
 
   if (req.body.currentPassword && req.body.newPassword) {
     const result = await bcrypt.compare(
@@ -110,12 +119,25 @@ const updateUser = async (req, res) => {
       return res.redirect("/profile");
     }
   }
-    await userService.updateUser(current_user._id,user_details);
-	const company_id = current_user.company._id;
-    await userService.updateCompany(company_id,company_details);
-  
+  await userService.updateUser(current_user._id, user_details);
+  const company_id = current_user.company._id;
+  await userService.updateCompany(company_id, company_details);
 
   return res.redirect("/profile");
+};
+
+const viewCSSAList = async (req, res) => {
+  const cssa_list = await userService.getCSSAList(
+    req.session.passport.user.company
+  );
+  //  console.log(cssa_list[0]._id);
+  res.render("user/CSSA.ejs", { cssa_list: cssa_list });
+};
+
+const deleteUser = async (req, res) => {
+  // console.log(req.body);
+  const result = userService.deleteUser(req.body.cssa_id);
+  res.redirect("/manage-cssa");
 };
 
 exports.handleLogin = login;
@@ -124,3 +146,5 @@ exports.handleLogout = logout;
 exports.getCurrentUser = getCurrentUser;
 exports.userProfile = viewProfile;
 exports.handleUpdate = updateUser;
+exports.viewCSSAList = viewCSSAList;
+exports.handleDelete = deleteUser;

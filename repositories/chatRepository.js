@@ -45,6 +45,34 @@ const markChatSeenByCSSA = async (chat_id) => {
 	}
 };
 
+const getAllChats = async () => {
+	try {
+		const chat = await Chat.find();
+	
+		return chat;
+	}catch (e){
+		return null;
+	}
+};
+
+
+const getAllmsgs=async () => {
+	try {
+		const chat = await ChatMessage.find();
+		return chat;
+	}catch (e){
+		
+		return null;
+	}
+};
+
+
+
+
+
+
 exports.getChatsOfCSSAWithMessages= getChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
 exports.markChatSeenByCSSA = markChatSeenByCSSA;
+exports.getAllChats = getAllChats;
+exports.getAllmsgs=getAllmsgs;

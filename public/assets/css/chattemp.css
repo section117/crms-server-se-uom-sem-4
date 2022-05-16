@@ -1,10 +1,13 @@
 body {
-    background-color: #3498db;
+    background-color: #fdfdfd;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     /* display: flex; */
   }
+
+
+
   .container {
     margin:  0;
     background: #fff;
@@ -42,6 +45,9 @@ body {
     background: #fafafa;
     padding: 10px 13px;
   }
+
+
+
   .search-box .input-wrapper {
     background: #fff;
     border-radius: 40px;

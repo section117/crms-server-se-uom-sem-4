@@ -13,6 +13,19 @@ const markChatSeenByCSSA = async (chat_id) => {
 	return await chatRepository.markChatSeenByCSSA(chat_id);
 };
 
+
+const getAllChats = async () => {
+	return await chatRepository.getAllChats();
+};
+
+const getAllmsgs = async () => {
+	return await chatRepository.getAllmsgs();
+};
+
+
+
 exports.getActiveChatsOfCSSAWithMessages = getActiveChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
 exports.markChatSeenByCSSA =markChatSeenByCSSA;
+exports.getAllChats=getAllChats;
+exports.getAllmsgs=getAllmsgs;

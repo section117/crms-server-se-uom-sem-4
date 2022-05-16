@@ -95,6 +95,8 @@ const chatSchema = new mongoose.Schema({
 });
 
 const chatModel = mongoose.model('Chat', chatSchema);
+const reviewModel = mongoose.model('Review', reviewSchema);
 
 exports.schema = chatSchema;
 exports.Chat = chatModel;
+exports.Review = reviewModel;

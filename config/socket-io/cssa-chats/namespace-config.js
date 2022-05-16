@@ -4,7 +4,7 @@ const { putSocket, removeSocket, getSocketsByUserID } = require('./cssa-socket-s
 const { cssaSendMessage } = require('../../../services/chatMessagesService');
 const { toggleCSSAOnlineStatus } = require('../../../services/userService');
 const { closeChat, markChatSeenByCSSA } = require('../../../services/chatService');
-const { sendMessageToCustomer } = require('../message-channel');
+const { sendMessageToCustomer, sendCSSASeenResponseToCustomer, indicateCSSATypingToCustomer} = require('../message-channel');
 
 const createAndConfigureCSSAMessagesNamespace = (io) => {
 	const cssaChatsWSNamespace = io.of('/cssa-messages');
@@ -67,11 +67,13 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 			const newChat = await markChatSeenByCSSA(chat_id);
 			if(newChat) {
 				emitCSSAChatSeenResponse({chat: newChat, status: 'OK'}, user_id, socket.id);
+				sendCSSASeenResponseToCustomer(chat_id, {chat: newChat, is_seen: true});
 			}
 		});
 
 		socket.on('cssa-typing-indicator-publish', (arg) => {
-			console.log(arg);
+			console.log('arg in typing indicator',arg);
+			indicateCSSATypingToCustomer(arg.chat_id);
 		});
 
 		//Add socket to the SocketStore

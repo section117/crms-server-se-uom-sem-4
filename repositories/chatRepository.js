@@ -1,4 +1,4 @@
-const { Chat } = require('../models/chat');
+const { Chat, Review} = require('../models/chat');
 const { User } = require('../models/user');
 const { ChatMessage } = require('../models/chat-message');
 const mongoose = require('mongoose');
@@ -36,7 +36,13 @@ const assignCSSA = async (company_id) => {
 				$and: [{user_type: "CSSA"}, {is_online: true}, {company: ObjectId(company_id)}]
 			},
 			{
-				_id: 1
+				_id: 1,
+				first_name: 1,
+				last_name: 1,
+				email: 1,
+				profile_pic: 1,
+				company: 1,
+				is_online: 1,
 			}
 		);
 	}catch (err) {
@@ -65,12 +71,12 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 		company: ObjectId(company_id),
 		assigned_cssa: cssa._id,
 		status: "ACTIVE",
-		updated_at: new Date()
+		updated_at: new Date(),
+		is_seen_by_cssa: false,
 	});
 
-	console.log("before saving", chat)
-
-	return await chat.save();
+	const newChat = await chat.save();
+	return {chat: newChat, cssa: cssa};
 }
 //check if a given chat is available
 const findChatByID = async chatID => {
@@ -97,9 +103,26 @@ const markChatSeenByCSSA = async (chat_id) => {
 	}
 };
 
+//update chat with customer review
+const updateChatWithCustomerReview = async (chat_id, customer_review) => {
+	const review = new Review({
+		is_resolved: customer_review.is_resolved,
+		is_satisfied: customer_review.is_satisfied,
+		customer_message: customer_review.customer_message,
+	});
+	try {
+		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {review: review}, {new: true});
+		return chat;
+	}catch (e){
+		console.log('error here',e);
+		return null;
+	}
+}
+
 exports.getChatsOfCSSAWithMessages= getChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
 exports.markChatSeenByCSSA = markChatSeenByCSSA;
 exports.initNewChats = initNewChat;
 exports.findChatByID = findChatByID;
+exports.updateChatWithCustomerReview = updateChatWithCustomerReview;
 

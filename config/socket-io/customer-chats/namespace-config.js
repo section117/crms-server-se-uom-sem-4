@@ -13,7 +13,6 @@ const createAndConfigureCustomerChatsNamespace = (io) => {
 
 		//Customer Message Send Listener
 		socket.on('customer-send-message', async message => {
-			console.log(message);
 			const result = await customerSendMessage({message: message, chat_id: chatID});
 			console.log('chat message: ', result);
 			if(!result) {
@@ -24,6 +23,10 @@ const createAndConfigureCustomerChatsNamespace = (io) => {
 				sendMessageReceivedResponse(socket, chatID, chatMessage);
 				sendMessageToCSSA(chat, chatMessage);
 			}
+		});
+
+		socket.on('disconnect', () => {
+			removeSocket(chatID, socket);
 		});
 
 		//Add socket to the SocketStore

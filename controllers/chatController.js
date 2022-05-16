@@ -31,7 +31,6 @@ const createNewChat = async (req, res) => {
 }
 const addChatReview = async (req, res) => {
 	const review = await chatService.addChatReview(req.body);
-	console.log(review, "hello");
 	if(!review) return res.status(202).send({data: null, status: "Failed"});
 	res.status(200).send({data: review, status:"Successfully added"});
 }

@@ -1,4 +1,4 @@
-const { Chat, Review} = require('../models/chat');
+const { Chat } = require('../models/chat');
 const { User } = require('../models/user');
 const { ChatMessage } = require('../models/chat-message');
 const mongoose = require('mongoose');
@@ -105,11 +105,11 @@ const markChatSeenByCSSA = async (chat_id) => {
 
 //update chat with customer review
 const updateChatWithCustomerReview = async (chat_id, customer_review) => {
-	const review = new Review({
+	const review = {
 		is_resolved: customer_review.is_resolved,
 		is_satisfied: customer_review.is_satisfied,
 		customer_message: customer_review.customer_message,
-	});
+	};
 	try {
 		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {review: review}, {new: true});
 		return chat;

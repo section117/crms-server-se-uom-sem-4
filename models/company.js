@@ -28,11 +28,6 @@ const companySchema = new mongoose.Schema({
 		trim: true,
 		minlength: 3,
 		maxlength: 255
-	},
-	owner: {
-		required: true,
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
 	}
 });
 

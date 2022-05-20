@@ -24,8 +24,14 @@ const markChatSeenByCSSA = async (chat_id) => {
 	return await chatRepository.markChatSeenByCSSA(chat_id);
 };
 
+const addChatReview= async (data) => {
+	return await chatRepository.updateChatWithCustomerReview(data.chat_id, data.customer_review);
+
+}
+
 exports.getActiveChatsOfCSSAWithMessages = getActiveChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
 exports.markChatSeenByCSSA =markChatSeenByCSSA;
 exports.createNewChat = createNewChat;
 exports.checkValidityIfChat = checkValidityOfChat;
+exports.addChatReview = addChatReview;

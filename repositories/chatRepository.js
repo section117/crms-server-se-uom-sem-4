@@ -110,6 +110,16 @@ const markChatSeenByCSSA = async (chat_id) => {
 	}
 };
 
+
+const getAllChats = async () => {
+	try {
+		const chat = await Chat.find();
+		return chat;
+	}catch (e){
+    
+  }
+};
+
 //update chat with customer review
 const updateChatWithCustomerReview = async (chat_id, customer_review) => {
 	const review = {
@@ -126,10 +136,22 @@ const updateChatWithCustomerReview = async (chat_id, customer_review) => {
 	}
 };
 
+const getAllmsgs=async () => {
+	try {
+		const chat = await ChatMessage.find();
+		return chat;
+	}catch (e){
+		
+		return null;
+	}
+};
+
 exports.getChatsOfCSSAWithMessages= getChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
 exports.markChatSeenByCSSA = markChatSeenByCSSA;
 exports.initNewChats = initNewChat;
 exports.findChatByID = findChatByID;
 exports.updateChatWithCustomerReview = updateChatWithCustomerReview;
+exports.getAllmsgs=getAllmsgs;
+exports.getAllChats = getAllChats;
 

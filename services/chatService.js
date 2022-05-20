@@ -24,14 +24,26 @@ const markChatSeenByCSSA = async (chat_id) => {
 	return await chatRepository.markChatSeenByCSSA(chat_id);
 };
 
+
+
+const getAllChats = async () => {
+	return await chatRepository.getAllChats();
+};
+
+const getAllmsgs = async () => {
+	return await chatRepository.getAllmsgs();
+};
+
 const addChatReview= async (data) => {
 	return await chatRepository.updateChatWithCustomerReview(data.chat_id, data.customer_review);
-
 }
+
 
 exports.getActiveChatsOfCSSAWithMessages = getActiveChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
 exports.markChatSeenByCSSA =markChatSeenByCSSA;
+exports.getAllChats=getAllChats;
+exports.getAllmsgs=getAllmsgs;
 exports.createNewChat = createNewChat;
 exports.checkValidityIfChat = checkValidityOfChat;
 exports.addChatReview = addChatReview;

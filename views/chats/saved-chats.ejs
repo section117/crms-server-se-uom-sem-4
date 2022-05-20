@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../components/head.ejs'); %>
+    <title>Chats | CRMS</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <link href="../assets/css/chattemp.css" rel="stylesheet" />
+
+</head>
+
+<body class="">
+<div class="wrapper">
+    <%- include('../components/sidebar.ejs'); %>
+    <div class="main-panel">
+        <%- include('../components/navbar.ejs'); %>
+        <div class="content">
+            <div class="container-fluid">
+                <!--Content goes here-->
+             
+                <div class="container">
+                    <div class="row no-gutters">
+                        <div class="col-md-4 border-right">
+                            <div class="settings-tray">
+                                <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg"
+                                    alt="Profile img">
+                                <span class="settings-tray--right">
+                                    <!-- <i class="material-icons">cached</i>
+                                    <i class="material-icons">message</i> -->
+                                    <i class="material-icons">menu</i>
+                                </span>
+                            </div>
+                            <div class="search-box">
+                                <div class="input-wrapper">
+                                    <i class="material-icons">search</i>
+                                    <input placeholder="Search here" type="text">
+                                </div>
+                            </div>
+
+                   
+                          
+
+                        <% for(var i=0; i<chats.length; i++) {%>
+                            <div class="friend-drawer selectchats friend-drawer--onhover" id=<%= chats[i]._id %>>
+                                <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg"
+                                    alt="">
+                                <div class="text">
+                                    <h6><%= chats[i].customer_name %></h6>
+                                    <p class="text-muted"><%= chats[i].title_question %></p>
+                                </div>
+                                <span class="time text-muted small">13:21</span>
+                            </div>
+                            <hr>
+                        <% } %>
+
+
+
+                        </div>
+                        <div class="col-md-8">
+                            <div class="settings-tray">
+                                <div class="friend-drawer no-gutters friend-drawer--grey">
+                               
+                                    <div class="text">
+                                        <!-- <h6>Robo Cop</h6>
+                                        <p class="text-muted">Layin' down the law since like before Christ...</p> -->
+                                    </div>
+                                    <span class="settings-tray--right">
+                                        <!-- <i class="material-icons">cached</i>
+                                        <i class="material-icons">message</i> -->
+                                        <i class="material-icons">menu</i>
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <div class="chat-panel">
+                                <% for(var j=0; j<msgs.length; j++) {%>
+                                  
+                                    <% if( msgs[j].is_incoming ) {%> 
+                                        <div class="row no-gutters msgs"  id=<%= msgs[j].chat_id+j%>>
+                                            <div class="col-md-3">
+                                                <div class="chat-bubble chat-bubble--left">
+                                                    <%= msgs[j].message %> 
+                                                   
+                                                
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } else{%> 
+                                        <div class="row no-gutters msgs" id=<%= msgs[j].chat_id+j%>>
+                                            <div class="col-md-3 offset-md-9">
+                                                <div class="chat-bubble chat-bubble--right">
+                                                    <%= msgs[j].message %> 
+                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } %> 
+                                <% } %>
+                                
+        
+
+
+                          
+                          
+                               
+                               
+                                <div class="row" id="777" style="display: none;">
+                                    <div class="col-12">
+                                        <div class="chat-box-tray">
+                                            <!-- <i class="material-icons">s</i> -->
+                                            <input type="text" placeholder="Type your message here...">
+                                            <!-- <i class="material-icons">mic</i> -->
+                                            <button class="round">send</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!--End content-->
+            </div>
+        </div>
+        <%- include('../components/footer.ejs'); %>
+    </div>
+</div>
+
+<%- include('../components/js-scripts.ejs'); %>
+<script src="../assets/js/savedchat.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -39,10 +39,13 @@ const homeRouter = require('./routes/home');
 const userRouter = require('./routes/user');
 const chatRouter = require('./routes/chat');
 const chatMessagesRouter = require('./routes/chat-messages');
+const savedChatRouter=require('./routes/saved-chats');
 app.use('/', homeRouter);
 app.use('/', userRouter);
 app.use('/chats', chatRouter);
 app.use('/chat-messages', chatMessagesRouter);
+app.use('/saved-chats', savedChatRouter);
+
 
 
 //Set up Socket.io

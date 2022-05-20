@@ -4,6 +4,7 @@ const { putSocket, removeSocket, getSocketsByUserID } = require('./cssa-socket-s
 const { cssaSendMessage } = require('../../../services/chatMessagesService');
 const { toggleCSSAOnlineStatus } = require('../../../services/userService');
 const { closeChat, markChatSeenByCSSA } = require('../../../services/chatService');
+const { sendMessageToCustomer, sendCSSASeenResponseToCustomer, indicateCSSATypingToCustomer} = require('../message-channel');
 
 const createAndConfigureCSSAMessagesNamespace = (io) => {
 	const cssaChatsWSNamespace = io.of('/cssa-messages');
@@ -37,6 +38,7 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 			const { chatMessage, chat } = result;
 			callback({status: 'OK', chatMessage, chat});
 			emitCSSASendMessageResponse(chatMessage, chat, user_id, socket.id);
+			sendMessageToCustomer(chatMessage, chat._id);
 		});
 
 		socket.on('cssa-toggle-online-status', async (arg) => {
@@ -65,11 +67,13 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 			const newChat = await markChatSeenByCSSA(chat_id);
 			if(newChat) {
 				emitCSSAChatSeenResponse({chat: newChat, status: 'OK'}, user_id, socket.id);
+				sendCSSASeenResponseToCustomer(chat_id, {chat: newChat, is_seen: true});
 			}
 		});
 
 		socket.on('cssa-typing-indicator-publish', (arg) => {
-			console.log(arg);
+			console.log('arg in typing indicator',arg);
+			indicateCSSATypingToCustomer(arg.chat_id);
 		});
 
 		//Add socket to the SocketStore
@@ -118,9 +122,14 @@ const emitCSSAChatSeenResponse = (content, user_id, current_socket_id) => {
 	emitEventByUserID('cssa-chat-seen-response', content, user_id, current_socket_id);
 };
 
+const emitCustomerMessageSend = (chat, chatMessage) => {
+	emitEventByUserID('customer-message-send', {chatMessage, chat}, chat.assigned_cssa, null);
+};
+
 const validateConnection = (user, socket) => {
 	if(!(user !== null && user.user_type && user.user_type === 'CSSA'))
 		socket.disconnect(true);
 };
 
 exports.createAndConfigureCSSAMessagesNamespace = createAndConfigureCSSAMessagesNamespace;
+exports.emitCustomerMessageSend = emitCustomerMessageSend;

@@ -22,9 +22,7 @@ app.use(express.static('public'));
 app.use(getExpressSessionStore());
 
 //Allow CORS
-app.use(cors({
-	origin: ['*']
-}));
+app.use(cors());
 
 
 //Set up Database

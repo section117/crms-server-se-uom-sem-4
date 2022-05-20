@@ -30,10 +30,11 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 
 //assign a CSSA to a chat
 const assignCSSA = async (company_id) => {
+	console.log('company id', company_id);
 	try {
 		return await User.findOne(
 			{
-				$and: [{user_type: "CSSA"}, {is_online: true}, {company: ObjectId(company_id)}]
+				$and: [{user_type: 'CSSA'}, {is_online: true}, {company: ObjectId(company_id)}]
 			},
 			{
 				_id: 1,
@@ -46,10 +47,10 @@ const assignCSSA = async (company_id) => {
 			}
 		);
 	}catch (err) {
-		console.log(err)
-		return null
+		console.log(err);
+		return null;
 	}
-}
+};
 
 //create new chat
 const initNewChat = async (customer_name, customer_email, title_ques, company_id) => {
@@ -57,10 +58,10 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 	//get available CSSA
 	const cssa = await assignCSSA(company_id);
 
-	console.log("here", cssa)
+	console.log('here', cssa);
 
 	if(!cssa) {
-		return null
+		return null;
 	}
 
 	//create new chat
@@ -70,18 +71,24 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 		title_question: title_ques,
 		company: ObjectId(company_id),
 		assigned_cssa: cssa._id,
-		status: "ACTIVE",
+		status: 'ACTIVE',
 		updated_at: new Date(),
 		is_seen_by_cssa: false,
 	});
 
-	const newChat = await chat.save();
-	return {chat: newChat, cssa: cssa};
-}
+	try {
+		const newChat = await chat.save();
+		return {chat: newChat, cssa: cssa};
+	} catch (err) {
+		console.log(err);
+		return null;
+	}
+
+};
 //check if a given chat is available
 const findChatByID = async chatID => {
 	return await Chat.find({_id : chatID});
-}
+};
 
 
 const closeChat = async (chat_id) => {
@@ -117,7 +124,7 @@ const updateChatWithCustomerReview = async (chat_id, customer_review) => {
 		console.log('error here',e);
 		return null;
 	}
-}
+};
 
 exports.getChatsOfCSSAWithMessages= getChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;

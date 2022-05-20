@@ -128,7 +128,7 @@ class AllChatsComponent extends React.Component {
 		});
 
 		socket.on('customer-message-send', response => {
-
+			this.listenCustomerMessageSend(response);
 		});
 
 
@@ -394,12 +394,21 @@ class AllChatsComponent extends React.Component {
 	listenCustomerMessageSend = response => {
 		const { chatMessage, chat: updatedChat } = response;
 		let newState = {};
-		const { active_chats, active_chat_ids} = this.state;
+		let { active_chats, active_chat_ids} = this.state;
 
 		if(chatMessage) {
 			//Add the message to the correct chat
 			newState['active_chats'] = {...active_chats};
-			const chat = newState['active_chats'][chatMessage.chat_id];
+			let chat;
+			if (!newState['active_chats'][chatMessage.chat_id]) {
+				 chat = {...updatedChat};
+				 chat['chat_messages'] = [];
+				 active_chat_ids = [...active_chat_ids];
+				 active_chat_ids.push(chatMessage.chat_id);
+				 newState['active_chats'][chatMessage.chat_id] = chat;
+			} else {
+				chat = newState['active_chats'][chatMessage.chat_id];
+			}
 			chat['updated_at'] = updatedChat.updated_at;
 			chat['chat_messages'].push(chatMessage);
 

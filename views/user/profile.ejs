@@ -2,159 +2,166 @@
 <html lang="en">
   <head>
     <%- include('../components/head.ejs') %>
+    <title>Material Dashboard by Creative Tim</title>
   </head>
 
   <body>
-    <section class="vh-100">
-      <div class="container-fluid h-custom mt-5">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-md-10 col-lg-10 col-xl-6 offset-xl-1">
-            <!-- <div class=" font-weight-bold h1 mt-3 mb-5 mr-5">Customer <span class="p-1" style="color: #9c27b0;">Relationship</span> Management System</div> -->
-            <form class="pr-5" method="post" action="profile">
-              <div
-                class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start"
-              >
-                <p class="lead fw-normal mb-3 me-3 h3 font-weight-bold">
-                  User Profile
-                </p>
-              </div>
-
-              <div class="form-outline mb-4">
-                <input
-                  type="email"
-                  id="form3Example3"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="email"
-                  value="<%= user.email %> "
-                />
-                <label class="form-label" for="form3Example3">email</label>
-              </div>
-
-              <div class="form-outline mb-4">
-                <input
-                  type="text"
-                  id="form3Example3"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="first_name"
-                  value="<%= user.first_name %> "
-                />
-                <label class="form-label" for="form3Example3">first name</label>
-              </div>
-
-              <div class="form-outline mb-4">
-                <input
-                  type="text"
-                  id="form3Example3"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="last_name"
-                  value="<%= user.last_name %> "
-                />
-                <label class="form-label" for="form3Example3">last name</label>
-              </div>
-
-              <div class="form-outline mb-4">
-                <input
-                  type="password"
-                  id="form3Example4"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="currentPassword"
-                />
-                <label class="form-label" for="form3Example4"
-                  >Current Password</label
+    <div class="wrapper">
+      <%- include('../components/sidebar.ejs'); %>
+      <div class="main-panel">
+        <%- include('../components/navbar.ejs'); %>
+        <div class="content">
+          <div class="container-fluid h-custom">
+            <div class="col-md-10 col-lg-10 col-xl-6 offset-xl-1">
+              <!-- <div class=" font-weight-bold h1 mt-3 mb-5 mr-5">Customer <span class="p-1" style="color: #9c27b0;">Relationship</span> Management System</div> -->
+              <form class="pr-5" method="post" action="profile">
+                <div
+                  class="d-flex flex-row justify-content-center justify-content-lg-start"
                 >
-              </div>
+                  <p class="lead fw-normal mb-3 me-3 h3 font-weight-bold">
+                    User Profile
+                  </p>
+                </div>
 
-              <div class="form-outline mb-4">
-                <input
-                  type="password"
-                  id="form3Example4"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="newPassword"
-                />
-                <label class="form-label" for="form3Example4"
-                  >New Password</label
-                >
-              </div>
+                <div class="form-outline mb-3">
+                  <input
+                    type="email"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="email"
+                    value="<%= user.email %> "
+                  />
+                  <label class="form-label" for="form3Example3">email</label>
+                </div>
 
-              <% if (user.user_type === 'COMPANY_OWNER') { %>
+                <div class="form-outline mb-3">
+                  <input
+                    type="text"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="first_name"
+                    value="<%= user.first_name %> "
+                  />
+                  <label class="form-label" for="form3Example3"
+                    >first name</label
+                  >
+                </div>
 
-              <hr />
-              <br />
-              <!-- company details -->
-              <div class="d-flex justify-content-between">
+                <div class="form-outline mb-3">
+                  <input
+                    type="text"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="last_name"
+                    value="<%= user.last_name %> "
+                  />
+                  <label class="form-label" for="form3Example3"
+                    >last name</label
+                  >
+                </div>
+
+                <div class="form-outline mb-3">
+                  <input
+                    type="password"
+                    id="form3Example4"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="currentPassword"
+                  />
+                  <label class="form-label" for="form3Example4"
+                    >Current Password</label
+                  >
+                </div>
+
+                <div class="form-outline mb-3">
+                  <input
+                    type="password"
+                    id="form3Example4"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="newPassword"
+                  />
+                  <label class="form-label" for="form3Example4"
+                    >New Password</label
+                  >
+                </div>
+
+                <% if (user.user_type === 'COMPANY_OWNER') { %>
+
+                <hr />
+                <br />
+                <!-- company details -->
                 <p class="lead fw-normal mb-3 me-3 h3 font-weight-bold">
                   Company Details
                 </p>
-                <a href="/manage-cssa" class="btn btn-primary btn-lg">Edit CSSA details</a>
-              </div>
-              <div class="form-outline mb-4">
-                <input
-                  type="text"
-                  id="form3Example3"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="company_name"
-                  value="<%= user.company.company_name %> "
-                />
-                <label class="form-label" for="form3Example3"
-                  >company name</label
-                >
-              </div>
 
-              <div class="form-outline mb-4">
-                <input
-                  type="email"
-                  id="form3Example3"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="company_email"
-                  value="<%= user.company.company_email %> "
-                />
-                <label class="form-label" for="form3Example3"
-                  >company email</label
-                >
-              </div>
-              <div class="form-outline mb-4">
-                <input
-                  type="text"
-                  id="form3Example3"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="website"
-                  value="<%= user.company.website %> "
-                />
-                <label class="form-label" for="form3Example3">website</label>
-              </div>
-              <div class="form-outline mb-4">
-                <input
-                  type="text"
-                  id="form3Example3"
-                  class="form-control form-control-lg"
-                  placeholder=""
-                  name="address"
-                  value="<%= user.company.address %> "
-                />
-                <label class="form-label" for="form3Example3">address</label>
-              </div>
-              <% } %>
-              <div class="text-center text-lg-start mt-4 pt-2">
-                <button
-                  type="submit"
-                  class="btn btn-primary btn-lg"
-                  style="padding-left: 2.5rem; padding-right: 2.5rem"
-                >
-                  Update
-                </button>
-              </div>
-            </form>
+                <div class="form-outline mb-3">
+                  <input
+                    type="text"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="company_name"
+                    value="<%= user.company.company_name %> "
+                  />
+                  <label class="form-label" for="form3Example3"
+                    >company name</label
+                  >
+                </div>
+
+                <div class="form-outline mb-3">
+                  <input
+                    type="email"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="company_email"
+                    value="<%= user.company.company_email %> "
+                  />
+                  <label class="form-label" for="form3Example3"
+                    >company email</label
+                  >
+                </div>
+                <div class="form-outline mb-3">
+                  <input
+                    type="text"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="website"
+                    value="<%= user.company.website %> "
+                  />
+                  <label class="form-label" for="form3Example3">website</label>
+                </div>
+                <div class="form-outline mb-3">
+                  <input
+                    type="text"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="address"
+                    value="<%= user.company.address %> "
+                  />
+                  <label class="form-label" for="form3Example3">address</label>
+                </div>
+                <% } %>
+                <div class="text-center text-lg-start">
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-lg"
+                    style="padding-left: 2.5rem; padding-right: 2.5rem"
+                  >
+                    Update
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </body>
 </html>

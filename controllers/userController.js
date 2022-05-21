@@ -120,8 +120,10 @@ const updateUser = async (req, res) => {
     }
   }
   await userService.updateUser(current_user._id, user_details);
-  const company_id = current_user.company._id;
-  await userService.updateCompany(company_id, company_details);
+  if (current_user.user_type == "COMPANY_OWNER") {
+    const company_id = current_user.company._id;
+    await userService.updateCompany(company_id, company_details);
+  }
 
   return res.redirect("/profile");
 };

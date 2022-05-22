@@ -88,7 +88,7 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 	// const cssa = cssaList[0];
 
 	//----------------------------------------------------------------------
-	
+
 
 	if(!cssa) {
 		return null;

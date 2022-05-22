@@ -1,6 +1,7 @@
 const chatService = require('../services/chatService');
 
 const sessionHelper = require('../helpers/session-helper');
+const {emitCustomerCloseChatResponse} = require('../config/socket-io/cssa-chats/namespace-config');
 
 const viewAllChats = (req, res) => {
 	res.render('chats/all-chats.ejs');
@@ -46,6 +47,12 @@ const addChatReview = async (req, res) => {
 const closeChat = async (req, res) => {
 	const chat = await chatService.closeChat(req.body.chat_id);
 	if(!chat) return res.status(202).send({data: null, status: 'Failed'});
+
+	const response = {
+		chat_id: chat._id,
+		'status': 'OK'
+	};
+	emitCustomerCloseChatResponse(response, chat.assigned_cssa);
 	res.status(200).send({data: chat, status:'Successfully Closed'});
 };
 

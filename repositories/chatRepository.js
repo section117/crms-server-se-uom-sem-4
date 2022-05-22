@@ -52,13 +52,43 @@ const assignCSSA = async (company_id) => {
 	}
 };
 
+//choose random CSSA for chat
+const assignRandomCSSA = async (company_id) => {
+	try{
+		return await User.aggregate([
+			{
+				$match: {
+					$and: [{user_type: 'CSSA'}, {is_online: true}, {company: ObjectId(company_id)}]
+				}
+			},
+			{
+				$sample: {size: 1}
+			}
+		]);
+	}catch (e) {
+		console.log(e);
+		return null;
+	}
+
+};
+
 //create new chat
 const initNewChat = async (customer_name, customer_email, title_ques, company_id) => {
 
 	//get available CSSA
 	const cssa = await assignCSSA(company_id);
 
-	console.log('here', cssa);
+
+	//choose random cssa ---------------------------------------------------
+
+	// const cssaList = await assignRandomCSSA(company_id);
+	// if(cssaList.length === 0){
+	// 	return null;
+	// }
+	// const cssa = cssaList[0];
+
+	//----------------------------------------------------------------------
+	
 
 	if(!cssa) {
 		return null;
@@ -116,8 +146,8 @@ const getAllChats = async () => {
 		const chat = await Chat.find();
 		return chat;
 	}catch (e){
-    
-  }
+
+	}
 };
 
 //update chat with customer review

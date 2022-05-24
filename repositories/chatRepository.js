@@ -2,6 +2,7 @@ const { Chat } = require('../models/chat');
 const { User } = require('../models/user');
 const { ChatMessage } = require('../models/chat-message');
 const mongoose = require('mongoose');
+const {Company} = require('../models/company');
 const ObjectId = mongoose.Types.ObjectId;
 
 const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
@@ -25,6 +26,15 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 	]).exec();
 
 	return chats;
+};
+
+//company validation
+const validateCompany = async (company_id) => {
+	try {
+		return await Company.findOne({_id: ObjectId(company_id)});
+	}catch (e){
+		return null;
+	}
 };
 
 
@@ -74,6 +84,11 @@ const assignRandomCSSA = async (company_id) => {
 
 //create new chat
 const initNewChat = async (customer_name, customer_email, title_ques, company_id) => {
+	//check if company exists
+	const company = await validateCompany(company_id);
+	if(!company){
+		return {error: 'NO_COMPANY', chat: null};
+	}
 
 	//get available CSSA
 	const cssa = await assignCSSA(company_id);
@@ -83,7 +98,7 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 
 	// const cssaList = await assignRandomCSSA(company_id);
 	// if(cssaList.length === 0){
-	// 	return null;
+	// 	return {error: 'NO_CSSA', chat: null};
 	// }
 	// const cssa = cssaList[0];
 
@@ -91,7 +106,7 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 
 
 	if(!cssa) {
-		return null;
+		return {error: 'NO_CSSA', chat: null};
 	}
 
 	//create new chat
@@ -106,12 +121,14 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 		is_seen_by_cssa: false,
 	});
 
+	console.log('chat', chat);
+
 	try {
 		const newChat = await chat.save();
 		return {chat: newChat, cssa: cssa};
 	} catch (err) {
 		console.log(err);
-		return null;
+		return {error: 'ERROR_CREATING_CHAT', chat: null};
 	}
 
 };
@@ -158,8 +175,7 @@ const updateChatWithCustomerReview = async (chat_id, customer_review) => {
 		customer_message: customer_review.customer_message,
 	};
 	try {
-		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {review: review}, {new: true});
-		return chat;
+		return await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {review: review}, {new: true});
 	}catch (e){
 		console.log('error here',e);
 		return null;

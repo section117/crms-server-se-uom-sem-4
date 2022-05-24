@@ -1,5 +1,5 @@
 const chatService = require('../services/chatService');
-
+const { chatValidateSchema, reviewValidateSchema, closeChatValidateSchema } = require('../helpers/validate-schema');
 const sessionHelper = require('../helpers/session-helper');
 const {emitCustomerCloseChatResponse} = require('../config/socket-io/cssa-chats/namespace-config');
 
@@ -30,22 +30,41 @@ const getActiveChatsOfCSSA = async (req, res) => {
 };
 
 //create a new chat
-
-//TODO: validate the http req
 const createNewChat = async (req, res) => {
 
-	const newChat = await chatService.createNewChat(req.body);
-	if(!newChat) return res.status(202).send({data: null, status: 'Failed'});
-	res.status(200).send({data: newChat, status:'Successfully added'});
+	//validate request body
+	const {error, value} = chatValidateSchema.validate(req.body, {abortEarly: false});
+	if(error) return res.status(202).json({status: 'Failed', data: error.details[0].message});
+
+	const chatData = await chatService.createNewChat(value);
+
+	if(!chatData.chat) return res.status(202).json({status: 'Failed', data: chatData.error});
+	res.status(200).send({status:'Successfully added', data: chatData});
 };
+
+//add review to a closed chat
 const addChatReview = async (req, res) => {
-	const review = await chatService.addChatReview(req.body);
+
+	console.log('chat review', req.body);
+
+	//validate request body
+	const {error, value} = reviewValidateSchema.validate(req.body, {abortEarly: false});
+	if(error) return res.status(202).json({status: 'Failed', data: error.details[0].message});
+
+	const review = await chatService.addChatReview(value);
+
+	console.log('review here', review);
 	if(!review) return res.status(202).send({data: null, status: 'Failed'});
 	res.status(200).send({data: review, status:'Successfully added'});
 };
 
 const closeChat = async (req, res) => {
-	const chat = await chatService.closeChat(req.body.chat_id);
+
+	//validate request body
+	const {error, value} = closeChatValidateSchema.validate(req.body, {abortEarly: false});
+	if(error) return res.status(202).json({status: 'Failed', data: error.details[0].message});
+
+	const chat = await chatService.closeChat(value.chat_id);
 	if(!chat) return res.status(202).send({data: null, status: 'Failed'});
 
 	const response = {

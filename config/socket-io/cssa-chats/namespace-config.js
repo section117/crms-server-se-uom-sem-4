@@ -118,6 +118,11 @@ const emitCSSACloseChatResponse = (response, user_id) => {
 	emitEventByUserID('cssa-close-chat-response', response, user_id, null);
 };
 
+//customer close chat response emitter
+const emitCustomerCloseChatResponse = (response, user_id) => {
+	emitEventByUserID('customer-close-chat-response', response, user_id, null);
+};
+
 const emitCSSAChatSeenResponse = (content, user_id, current_socket_id) => {
 	emitEventByUserID('cssa-chat-seen-response', content, user_id, current_socket_id);
 };
@@ -133,3 +138,4 @@ const validateConnection = (user, socket) => {
 
 exports.createAndConfigureCSSAMessagesNamespace = createAndConfigureCSSAMessagesNamespace;
 exports.emitCustomerMessageSend = emitCustomerMessageSend;
+exports.emitCustomerCloseChatResponse = emitCustomerCloseChatResponse;

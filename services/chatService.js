@@ -8,13 +8,13 @@ const getActiveChatsOfCSSAWithMessages = async (user_id) => {
 
 //create a new chat
 const createNewChat = async (data) => {
-	return await chatRepository.initNewChats(data.name, data.email, data.title_question,data.company_id);
-}
+	return await chatRepository.initNewChats(data.name, data.email, data.title_question, data.company_id);
+};
 
 //check validity if chat
 const checkValidityOfChat = async chatID => {
 	return await chatRepository.findChatByID(chatID);
-}
+};
 
 const closeChat = async (chat_id) => {
 	return await chatRepository.closeChat(chat_id);
@@ -36,7 +36,7 @@ const getAllmsgs = async () => {
 
 const addChatReview= async (data) => {
 	return await chatRepository.updateChatWithCustomerReview(data.chat_id, data.customer_review);
-}
+};
 
 
 exports.getActiveChatsOfCSSAWithMessages = getActiveChatsOfCSSAWithMessages;

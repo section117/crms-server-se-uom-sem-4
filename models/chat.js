@@ -61,37 +61,37 @@ const chatSchema = new mongoose.Schema({
 		trim: true,
 		minlength: 3,
 		maxlength: 255
+	},
+	company: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Company',
+		required: true
+	},
+	assigned_cssa: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User',
+		required: true
+	},
+	status: {
+		type: String,
+		required: true,
+		trim: true,
+		minlength: 3,
+		maxlength: 25,
+		enum: ['ACTIVE', 'CLOSED']
+	},
+	review: {
+		type: reviewSchema,
+		required: false
+	},
+	updated_at: {
+		type: Date,
+		required: true
+	},
+	is_seen_by_cssa: {
+		type: Boolean,
+		required: true
 	}
-	// company: {
-	// 	type: mongoose.Schema.Types.ObjectId,
-	// 	ref: 'Company',
-	// 	required: true
-	// },
-	// assigned_cssa: {
-	// 	type: mongoose.Schema.Types.ObjectId,
-	// 	ref: 'User',
-	// 	required: true
-	// },
-	// status: {
-	// 	type: String,
-	// 	required: true,
-	// 	trim: true,
-	// 	minlength: 3,
-	// 	maxlength: 25,
-	// 	enum: ['ACTIVE', 'CLOSED']
-	// },
-	// review: {
-	// 	type: reviewSchema,
-	// 	required: false
-	// },
-	// updated_at: {
-	// 	type: Date,
-	// 	required: true
-	// },
-	// is_seen_by_cssa: {
-	// 	type: Boolean,
-	// 	required: true
-	// }
 });
 
 const chatModel = mongoose.model('Chat', chatSchema);

@@ -157,7 +157,7 @@ class AllChatsComponent extends React.Component {
 	toggleOnlineStatus = () => {
 		const {is_online, user} = this.state;
 
-		this.emitToggleOnlineStatus({is_online: !is_online, user_id: user._id});
+		this.emitToggleOnlineStatus({is_online: !is_online, user_id: user._id, active_chat_ids: this.state.active_chat_ids});
 
 	};
 

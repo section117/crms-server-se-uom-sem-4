@@ -4,7 +4,9 @@ const { putSocket, removeSocket, getSocketsByUserID } = require('./cssa-socket-s
 const { cssaSendMessage } = require('../../../services/chatMessagesService');
 const { toggleCSSAOnlineStatus } = require('../../../services/userService');
 const { closeChat, markChatSeenByCSSA } = require('../../../services/chatService');
-const { sendMessageToCustomer, sendCSSASeenResponseToCustomer, indicateCSSATypingToCustomer} = require('../message-channel');
+const { sendMessageToCustomer, sendCSSASeenResponseToCustomer, indicateCSSATypingToCustomer,
+	sendCSSAToggleOnlineStatusResponseToCustomer
+} = require('../message-channel');
 
 const createAndConfigureCSSAMessagesNamespace = (io) => {
 	const cssaChatsWSNamespace = io.of('/cssa-messages');
@@ -42,11 +44,12 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 		});
 
 		socket.on('cssa-toggle-online-status', async (arg) => {
-			let { is_online, user_id } = arg;
+			let { is_online, user_id, active_chat_ids } = arg;
 			const user = await toggleCSSAOnlineStatus(user_id, is_online);
 			if(!user)
 				is_online = !is_online;
 			emitCSSAoggleOnlineStatusResponse(is_online, user_id);
+			sendCSSAToggleOnlineStatusResponseToCustomer(is_online, active_chat_ids);
 
 		});
 

@@ -23,6 +23,7 @@ body {
     background: #eee;
     padding: 10px 15px;
     border-radius: 7px;
+    height: 60px;
   }
   .settings-tray .no-gutters {
     padding: 0;

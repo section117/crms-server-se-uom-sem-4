@@ -34,28 +34,26 @@ class AllChatsComponent extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
-				<div className="container">
-					<h1>Connection Status - { this.state.connection_status ? "Connected" : "Disconnected"}</h1>
-					<button onClick={this.toggleOnlineStatus}>
-						{this.state.is_online ? 'Online' : 'Offline'}
-					</button>
+				<div className="container p-0">
+					{/*<button onClick={this.toggleOnlineStatus}>*/}
+					{/*	{this.state.is_online ? 'Online' : 'Offline'}*/}
+					{/*</button>*/}
 					<div className="row no-gutters">
 						<div className="col-md-4 border-right">
 							<div className="settings-tray">
-								<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg" alt="Profile img" />
-								<span className="settings-tray--right">
-                {/* <i class="material-icons">cached</i>
-                    <i class="material-icons">message</i> */}
-									<i className="material-icons">menu</i>
-              </span>
+								{/*<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg" alt="Profile img" />*/}
+								<div className="h6">Connection Status-<span className="font-weight-bold font-italic"> { this.state.connection_status ? "Connected " : "Disconnected "}</span><i className={this.state.connection_status ? 'fa fa-circle text-success': 'fa fa-circle text-danger'}/></div>
 							</div>
-							<div className="search-box">
-								<div className="input-wrapper">
-									<i className="material-icons">search</i>
-									<input placeholder="Search here" type="text" />
-								</div>
+							{/*<div className="search-box">*/}
+							{/*	<div className="input-wrapper">*/}
+							{/*		<i className="material-icons">search</i>*/}
+							{/*		<input placeholder="Search here" type="text" />*/}
+							{/*	</div>*/}
+							{/*</div>*/}
+							<div className="overflow-auto" style={{height: '540px'}}>
+								{this.renderChats()}
 							</div>
-							{this.renderChats()}
+
 
 						</div>
 						{this.state.is_initial ? this.renderWelcomeScreen() : this.renderMessages()}
@@ -509,8 +507,9 @@ class AllChatsComponent extends React.Component {
 					</div>
 				</div>
 				<div className="chat-panel">
-					{chatMessages}
-
+					<div className='overflow-auto' style={{height: '480px'}}>
+						{chatMessages}
+					</div>
 					<div className="row">
 						<div className="col-12">
 							<div className="chat-box-tray">

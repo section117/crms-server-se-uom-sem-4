@@ -10,7 +10,7 @@
     Tip 2: you can also add an image using data-image tag
 -->
   <div class="logo">
-    <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+    <a href="/" class="simple-text logo-normal">
       CRMS
     </a>
   </div>
@@ -19,28 +19,48 @@
     data-ps-id="42b95c38-ed75-b432-7146-675901c29f14"
   >
     <ul class="nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="dashboard">
+      <li class="nav-item <% if(slug && slug === 'dashboard'){ %> active <% } %>">
+        <a class="nav-link" href="/dashboard">
           <i class="material-icons">dashboard</i>
           <p>Dashboard</p>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="chats">
+      <li class="nav-item <% if(slug && slug === 'integration'){ %> active <% } %>">
+        <a class="nav-link" href="/integration">
+          <i class="material-icons">integration_instructions</i>
+          <p>Integration</p>
+        </a>
+      </li>
+      <li class="nav-item <% if(slug && slug === 'chats'){ %> active <% } %>">
+        <a class="nav-link" href="/chats">
           <i class="material-icons">chat</i>
-          <p>Chat</p>
+          <p>Chats</p>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="profile">
+      <li class="nav-item <% if(slug && slug === 'archives'){ %> active <% } %>">
+        <a class="nav-link" href="/chats/archives">
+          <i class="material-icons">archive</i>
+          <p>Archives</p>
+        </a>
+      </li>
+      <li class="nav-item <% if(slug && slug === 'profile'){ %> active <% } %>">
+        <a class="nav-link" href="/profile">
           <i class="material-icons">person</i>
-          <p>User Profile</p>
+          <p>Profile</p>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="manage-cssa">
+      <li class="nav-item <% if(slug && slug === 'manage-cssa'){ %> active <% } %>">
+        <a class="nav-link" href="/manage-cssa">
           <i class="material-icons">people</i>
-          <p>CSSA Details</p>
+          <p>CSSA Management</p>
+        </a>
+      </li>
+    </ul>
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">
+          <i class="material-icons">logout</i>
+          <p>Logout</p>
         </a>
       </li>
     </ul>

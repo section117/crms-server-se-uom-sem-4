@@ -13,8 +13,18 @@ const viewDashboard = (req, res) => {
 	res.render('home/dashboard.ejs');
 };
 
+const viewChatIntegration = (req, res) => {
+	res.render('home/integration.ejs');
+};
+
+const render404 = (req, res) => {
+	res.render('errors/404.ejs');
+};
+
 module.exports = {
 	viewHome,
 	viewDashboard,
-	viewSignupPage
+	viewSignupPage,
+	viewChatIntegration,
+	render404
 };

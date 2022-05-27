@@ -8,8 +8,9 @@ const viewAllChats = (req, res) => {
 };
 
 const viewSavedChats =async (req, res) => {
-	const chat= await chatService.getAllChats();
-	const msgs=await chatService.getAllmsgs();
+	const company_id = req.session.passport.user.company;
+	const chat= await chatService.getAllChats(company_id);
+	const msgs=await chatService.getAllmsgs(company_id);
 	// console.log(msgs[0].chat_id.toString());
 	res.render('chats/saved-chats.ejs',{ chats: chat , msgs: msgs});
 };

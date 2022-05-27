@@ -439,16 +439,20 @@ class AllChatsComponent extends React.Component {
 			return (<div className="col-md-8">
 				<div className="settings-tray">
 					<div className="friend-drawer no-gutters friend-drawer--grey">
-						<img className="profile-image"
-							 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>
+						{/*<img className="profile-image"*/}
+						{/*	 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>*/}
+						<i className='fa fa-user-circle' style={{fontSize: '40px'}}/>
 						<div className="text">
 							<h6>Welcome, {user.first_name}</h6>
 							<p className="text-muted">{user.first_name + ' ' + user.last_name+ ' - ' + 'CSSA'}</p>
 						</div>
 						<span className="settings-tray--right">
-						   <i className="material-icons">cached</i>
-								<i className="material-icons">message</i>
-												<i className="material-icons">menu</i>
+						   <label className="switch">
+								<input type="checkbox" onClick={() => {this.setState({connection_status: !this.state.connection_status})}}  checked={this.state.connection_status}/>
+  								<span className="slider round1"></span>
+
+							</label>
+							<span className="p-2 font-weight-bold">{this.state.connection_status? 'Online': 'Offline'}</span>
 						</span>
 					</div>
 				</div>
@@ -493,17 +497,22 @@ class AllChatsComponent extends React.Component {
 			<div className="col-md-8">
 				<div className="settings-tray">
 					<div className="friend-drawer no-gutters friend-drawer--grey">
-						<img className="profile-image"
-							 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>
+						{/*<img className="profile-image"*/}
+						{/*	 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>*/}
+						<i className='fa fa-user-circle' style={{fontSize: '40px'}}/>
 						<div className="text">
 							<h6>{loaded_chat.customer_name}</h6>
 							<p className="text-muted">Email - {loaded_chat.customer_email}</p>
 						</div>
 						<span className="settings-tray--right">
-                   			<i className="material-icons" onClick={() => this.closeChat(loaded_chat._id)}>cached</i>
-                        	<i className="material-icons">message</i>
-							<i className="material-icons">menu</i>
+							<label className="switch">
+								<input type="checkbox" onClick={() => {this.setState({connection_status: !this.state.connection_status})}}  checked={this.state.connection_status}/>
+  								<span className="slider round1"></span>
+
+							</label>
+							<span className="p-2 font-weight-bold">{this.state.connection_status? 'Online': 'Offline'}</span>
                 		</span>
+						<i className="material-icons ml-4 cursor font-weight-bold" style={{cursor: 'pointer'}} onClick={() => this.closeChat(loaded_chat._id)}>close</i>
 					</div>
 				</div>
 				<div className="chat-panel">
@@ -535,7 +544,8 @@ class AllChatsComponent extends React.Component {
 			return (
 				<React.Fragment key={chat._id}>
 					<div className={this.determineChatClass(chat)} onClick={() => this.loadChat(chat._id)}>
-						<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="" />
+						{/*<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="" />*/}
+						<i className='fa fa-user-circle' style={{fontSize: '40px'}}/>
 						<div className="text">
 							<h6>{chat.customer_name} {!chat.is_seen_by_cssa ? <span className="badge badge-success">New</span> : ''}</h6>
 							<p className="text-muted">{chat.title_question}</p>

@@ -6,26 +6,33 @@ const {Company} = require('../models/company');
 const ObjectId = mongoose.Types.ObjectId;
 
 const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
-	const chats = await Chat.aggregate([
-		{
-			$match: {
-				$and: [ {status: chat_status}, {assigned_cssa: ObjectId(user_id) } ]
-			}
-		},
-		{
-			$sort: {updated_at: -1}
-		},
-		{
-			$lookup: {
-				from: ChatMessage.collection.name,
-				localField: '_id',
-				foreignField: 'chat_id',
-				as: 'chat_messages',
+	try {
+		const chats = await Chat.aggregate([
+			{
+				$match: {
+					$and: [ {status: chat_status}, {assigned_cssa: ObjectId(user_id) } ]
+				}
 			},
-		}
-	]).exec();
+			{
+				$sort: {updated_at: -1}
+			},
+			{
+				$lookup: {
+					from: ChatMessage.collection.name,
+					localField: '_id',
+					foreignField: 'chat_id',
+					as: 'chat_messages',
+				},
+			}
+		]).exec();
 
-	return chats;
+		return chats;
+	}catch (error) {
+		console.log(error);
+		return [];
+	}
+
+
 };
 
 //company validation
@@ -85,13 +92,25 @@ const assignRandomCSSA = async (company_id) => {
 //create new chat
 const initNewChat = async (customer_name, customer_email, title_ques, company_id) => {
 	//check if company exists
-	const company = await validateCompany(company_id);
+	let company;
+	try {
+		company = await validateCompany(company_id);
+	}catch (error) {
+		console.log(error);
+	}
+
 	if(!company){
 		return {error: 'NO_COMPANY', chat: null};
 	}
 
 	//get available CSSA
-	const cssa = await assignCSSA(company_id);
+	let cssa;
+	try {
+		cssa = await assignCSSA(company_id);
+	}catch (error) {
+		console.log(error);
+	}
+
 
 
 	//choose random cssa ---------------------------------------------------
@@ -134,7 +153,13 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 };
 //check if a given chat is available
 const findChatByID = async chatID => {
-	return await Chat.find({_id : chatID});
+	try {
+		const chat = await Chat.find({_id : chatID});
+		return chat;
+	}catch (error) {
+		console.log(error);
+		return null;
+	}
 };
 
 
@@ -143,6 +168,7 @@ const closeChat = async (chat_id) => {
 		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {status: 'CLOSED'}, {new: true});
 		return chat;
 	} catch (e) {
+		console.log(e);
 		return null;
 	}
 
@@ -153,6 +179,7 @@ const markChatSeenByCSSA = async (chat_id) => {
 		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {is_seen_by_cssa: true}, {new: true});
 		return chat;
 	}catch (e){
+		console.log(e);
 		return null;
 	}
 };
@@ -163,7 +190,8 @@ const getAllChats = async () => {
 		const chat = await Chat.find();
 		return chat;
 	}catch (e){
-
+		console.log(e);
+		return [];
 	}
 };
 
@@ -187,7 +215,7 @@ const getAllmsgs=async () => {
 		const chat = await ChatMessage.find();
 		return chat;
 	}catch (e){
-		
+		console.log(e);
 		return null;
 	}
 };

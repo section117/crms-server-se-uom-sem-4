@@ -20,7 +20,7 @@ body {
     border-radius: 40px;
   }
   .settings-tray {
-    background: #eee;
+    background: #c2bec5;
     padding: 10px 15px;
     border-radius: 7px;
     height: 60px;
@@ -79,7 +79,7 @@ body {
     transition: 0.3s ease;
   }
   .friend-drawer--grey {
-    background: #eee;
+    background: #c2bec5;
   }
   .friend-drawer .text {
     margin-left: 12px;

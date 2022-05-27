@@ -13,8 +13,13 @@ const viewDashboard = (req, res) => {
 	res.render('home/dashboard.ejs');
 };
 
+const viewChatIntegration = (req, res) => {
+	res.render('home/integration.ejs');
+};
+
 module.exports = {
 	viewHome,
 	viewDashboard,
-	viewSignupPage
+	viewSignupPage,
+	viewChatIntegration
 };

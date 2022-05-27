@@ -22,21 +22,21 @@ router.post(
 
 router.get(
 	'/manage-cssa',
-	userRoleMiddleware.ensureUserRole,
 	authMiddleware.ensureAuthenticated,
+	userRoleMiddleware.allowByUserTypes(['COMPANY_OWNER']),
 	userController.viewCSSAList
 );
 
 router.post(
 	'/manage-cssa',
-	userRoleMiddleware.ensureUserRole,
+	userRoleMiddleware.allowByUserTypes(['COMPANY_OWNER']),
 	authMiddleware.ensureAuthenticated,
 	userController.handleRegistration
 );
 
 router.post(
 	'/delete-cssa',
-	userRoleMiddleware.ensureUserRole,
+	userRoleMiddleware.allowByUserTypes(['COMPANY_OWNER']),
 	authMiddleware.ensureAuthenticated,
 	userController.handleDelete
 );

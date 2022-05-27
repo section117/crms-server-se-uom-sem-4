@@ -6,26 +6,31 @@ const { Company } = require("../models/company");
 const ObjectId = mongoose.Types.ObjectId;
 
 const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
-  const chats = await Chat.aggregate([
-    {
-      $match: {
-        $and: [{ status: chat_status }, { assigned_cssa: ObjectId(user_id) }],
-      },
-    },
-    {
-      $sort: { updated_at: -1 },
-    },
-    {
-      $lookup: {
-        from: ChatMessage.collection.name,
-        localField: "_id",
-        foreignField: "chat_id",
-        as: "chat_messages",
-      },
-    },
-  ]).exec();
+	try {
+		const chats = await Chat.aggregate([
+			{
+				$match: {
+					$and: [ {status: chat_status}, {assigned_cssa: ObjectId(user_id) } ]
+				}
+			},
+			{
+				$sort: {updated_at: -1}
+			},
+			{
+				$lookup: {
+					from: ChatMessage.collection.name,
+					localField: '_id',
+					foreignField: 'chat_id',
+					as: 'chat_messages',
+				},
+			}
+		]).exec();
 
-  return chats;
+		return chats;
+	}catch (error) {
+		console.log(error);
+		return [];
+	}
 };
 
 //company validation
@@ -89,93 +94,108 @@ const assignRandomCSSA = async (company_id) => {
 };
 
 //create new chat
-const initNewChat = async (
-  customer_name,
-  customer_email,
-  title_ques,
-  company_id
-) => {
-  //check if company exists
-  const company = await validateCompany(company_id);
-  if (!company) {
-    return { error: "NO_COMPANY", chat: null };
-  }
+const initNewChat = async (customer_name, customer_email, title_ques, company_id) => {
+	//check if company exists
+	let company;
+	try {
+		company = await validateCompany(company_id);
+	}catch (error) {
+		console.log(error);
+	}
 
-  //get available CSSA
-  const cssa = await assignCSSA(company_id);
+	if(!company){
+		return {error: 'NO_COMPANY', chat: null};
+	}
 
-  //choose random cssa ---------------------------------------------------
+	//get available CSSA
+	let cssa;
+	try {
+		cssa = await assignCSSA(company_id);
+	}catch (error) {
+		console.log(error);
+	}
 
-  // const cssaList = await assignRandomCSSA(company_id);
-  // if(cssaList.length === 0){
-  // 	return {error: 'NO_CSSA', chat: null};
-  // }
-  // const cssa = cssaList[0];
 
-  //----------------------------------------------------------------------
 
-  if (!cssa) {
-    return { error: "NO_CSSA", chat: null };
-  }
+	//choose random cssa ---------------------------------------------------
 
-  //create new chat
-  const chat = new Chat({
-    customer_name: customer_name,
-    customer_email: customer_email,
-    title_question: title_ques,
-    company: ObjectId(company_id),
-    assigned_cssa: cssa._id,
-    status: "ACTIVE",
-    updated_at: new Date(),
-    is_seen_by_cssa: false,
-  });
+	// const cssaList = await assignRandomCSSA(company_id);
+	// if(cssaList.length === 0){
+	// 	return {error: 'NO_CSSA', chat: null};
+	// }
+	// const cssa = cssaList[0];
 
-  console.log("chat", chat);
+	//----------------------------------------------------------------------
 
-  try {
-    const newChat = await chat.save();
-    return { chat: newChat, cssa: cssa };
-  } catch (err) {
-    console.log(err);
-    return { error: "ERROR_CREATING_CHAT", chat: null };
-  }
+
+	if(!cssa) {
+		return {error: 'NO_CSSA', chat: null};
+	}
+
+	//create new chat
+	const chat = new Chat({
+		customer_name: customer_name,
+		customer_email: customer_email,
+		title_question: title_ques,
+		company: ObjectId(company_id),
+		assigned_cssa: cssa._id,
+		status: 'ACTIVE',
+		updated_at: new Date(),
+		is_seen_by_cssa: false,
+	});
+
+	console.log('chat', chat);
+
+	try {
+		const newChat = await chat.save();
+		return {chat: newChat, cssa: cssa};
+	} catch (err) {
+		console.log(err);
+		return {error: 'ERROR_CREATING_CHAT', chat: null};
+	}
+
 };
 //check if a given chat is available
-const findChatByID = async (chatID) => {
-  return await Chat.find({ _id: chatID });
+const findChatByID = async chatID => {
+	try {
+		const chat = await Chat.find({_id : chatID});
+		return chat;
+	}catch (error) {
+		console.log(error);
+		return null;
+	}
 };
 
 const closeChat = async (chat_id) => {
-  try {
-    const chat = await Chat.findOneAndUpdate(
-      { _id: ObjectId(chat_id) },
-      { status: "CLOSED" },
-      { new: true }
-    );
-    return chat;
-  } catch (e) {
-    return null;
-  }
+	try{
+		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {status: 'CLOSED'}, {new: true});
+		return chat;
+	} catch (e) {
+		console.log(e);
+		return null;
+	}
+
 };
 
 const markChatSeenByCSSA = async (chat_id) => {
-  try {
-    const chat = await Chat.findOneAndUpdate(
-      { _id: ObjectId(chat_id) },
-      { is_seen_by_cssa: true },
-      { new: true }
-    );
-    return chat;
-  } catch (e) {
-    return null;
-  }
+	try {
+		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {is_seen_by_cssa: true}, {new: true});
+		return chat;
+	}catch (e){
+		console.log(e);
+		return null;
+	}
 };
 
-const getAllChats = async (company_id) => {
-  try {
-    const chats = await Chat.find({ company_id: company_id });
-    return chats;
-  } catch (e) {}
+
+const getAllChats = async () => {
+	try {
+		const chat = await Chat.find();
+		return chat;
+	}catch (e){
+		console.log(e);
+		return [];
+	}
 };
 
 //update chat with customer review

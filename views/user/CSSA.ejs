@@ -2,13 +2,13 @@
 <html lang="en">
   <head>
     <%- include('../components/head.ejs'); %>
-    <title>Material Dashboard by Creative Tim</title>
+    <title>CSSA Management | <%= process.env.APP_NAME %></title>
   </head>
   <body>
     <div class="wrapper">
-      <%- include('../components/sidebar.ejs'); %>
+      <%- include('../components/sidebar.ejs', {slug: 'manage-cssa'}); %>
       <div class="main-panel">
-        <%- include('../components/navbar.ejs'); %>
+        <%- include('../components/navbar.ejs', {name: 'CSSA Management', url: '/manage-cssa'}); %>
         <div class="container">
           <h2 class="mt-5 font-weight-bold">Manage your CSSAs</h2>
           <div class="container d-flex">
@@ -108,7 +108,9 @@
             </div>
           </div>
         </div>
+        <%- include('../components/footer.ejs'); %>
       </div>
     </div>
+    <%- include('../components/js-scripts.ejs'); %>
   </body>
 </html>

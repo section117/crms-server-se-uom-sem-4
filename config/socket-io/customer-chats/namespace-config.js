@@ -1,4 +1,3 @@
-const {checkValidityIfChat, addChatReview} = require('../../../services/chatService');
 const { putSocket, removeSocket, getSocketsByChatID } = require('./customer-socket-store');
 const {customerSendMessage} = require('../../../services/chatMessagesService');
 const { sendMessageToCSSA } = require('../message-channel');
@@ -65,7 +64,15 @@ const indicateTypingToCustomer = (chat_id) => {
 	emitEventByChatID('typing-indicator-response', null, chat_id, null);
 };
 
+//Emit cssa toggle online status response to the customer
+const sendCSSAToggleOnlineStatusResponse = (is_online, active_chat_ids) => {
+	active_chat_ids.map(chat_id => {
+		emitEventByChatID('cssa-toggle-online-status-response', is_online, chat_id, null);
+	});
+};
+
 exports.createAndConfigureCustomerChatsNamespace = createAndConfigureCustomerChatsNamespace;
 exports.sendCSSAMessage = sendCSSAMessage;
 exports.sendCSSASeenResponse = sendCSSASeenResponse;
 exports.indicateTypingToCustomer = indicateTypingToCustomer;
+exports.sendCSSAToggleOnlineStatusResponse = sendCSSAToggleOnlineStatusResponse;

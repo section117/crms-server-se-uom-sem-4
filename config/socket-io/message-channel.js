@@ -19,7 +19,13 @@ const indicateCSSATypingToCustomer = (chat_id) => {
 	indicateTypingToCustomer(chat_id);
 };
 
+const sendCSSAToggleOnlineStatusResponseToCustomer = (is_online, active_chat_ids) => {
+	const { sendCSSAToggleOnlineStatusResponse } = require('./customer-chats/namespace-config');
+	sendCSSAToggleOnlineStatusResponse(is_online, active_chat_ids);
+};
+
 exports.sendMessageToCSSA = sendMessageToCSSA;
 exports.sendMessageToCustomer = sendMessageToCustomer;
 exports.sendCSSASeenResponseToCustomer = sendCSSASeenResponseToCustomer;
 exports.indicateCSSATypingToCustomer = indicateCSSATypingToCustomer;
+exports.sendCSSAToggleOnlineStatusResponseToCustomer = sendCSSAToggleOnlineStatusResponseToCustomer;

@@ -34,28 +34,26 @@ class AllChatsComponent extends React.Component {
 	render() {
 		return (
 			<React.Fragment>
-				<div className="container">
-					<h1>Connection Status - { this.state.connection_status ? "Connected" : "Disconnected"}</h1>
-					<button onClick={this.toggleOnlineStatus}>
-						{this.state.is_online ? 'Online' : 'Offline'}
-					</button>
+				<div className="container p-0">
+					{/*<button onClick={this.toggleOnlineStatus}>*/}
+					{/*	{this.state.is_online ? 'Online' : 'Offline'}*/}
+					{/*</button>*/}
 					<div className="row no-gutters">
 						<div className="col-md-4 border-right">
 							<div className="settings-tray">
-								<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg" alt="Profile img" />
-								<span className="settings-tray--right">
-                {/* <i class="material-icons">cached</i>
-                    <i class="material-icons">message</i> */}
-									<i className="material-icons">menu</i>
-              </span>
+								{/*<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg" alt="Profile img" />*/}
+								<div className="h6">Connection Status-<span className="font-weight-bold font-italic"> { this.state.connection_status ? "Connected " : "Disconnected "}</span><i className={this.state.connection_status ? 'fa fa-circle text-success': 'fa fa-circle text-danger'}/></div>
 							</div>
-							<div className="search-box">
-								<div className="input-wrapper">
-									<i className="material-icons">search</i>
-									<input placeholder="Search here" type="text" />
-								</div>
+							{/*<div className="search-box">*/}
+							{/*	<div className="input-wrapper">*/}
+							{/*		<i className="material-icons">search</i>*/}
+							{/*		<input placeholder="Search here" type="text" />*/}
+							{/*	</div>*/}
+							{/*</div>*/}
+							<div className="overflow-auto" style={{height: '540px'}}>
+								{this.renderChats()}
 							</div>
-							{this.renderChats()}
+
 
 						</div>
 						{this.state.is_initial ? this.renderWelcomeScreen() : this.renderMessages()}
@@ -157,7 +155,7 @@ class AllChatsComponent extends React.Component {
 	toggleOnlineStatus = () => {
 		const {is_online, user} = this.state;
 
-		this.emitToggleOnlineStatus({is_online: !is_online, user_id: user._id});
+		this.emitToggleOnlineStatus({is_online: !is_online, user_id: user._id, active_chat_ids: this.state.active_chat_ids});
 
 	};
 
@@ -441,16 +439,20 @@ class AllChatsComponent extends React.Component {
 			return (<div className="col-md-8">
 				<div className="settings-tray">
 					<div className="friend-drawer no-gutters friend-drawer--grey">
-						<img className="profile-image"
-							 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>
+						{/*<img className="profile-image"*/}
+						{/*	 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>*/}
+						<i className='fa fa-user-circle' style={{fontSize: '40px'}}/>
 						<div className="text">
 							<h6>Welcome, {user.first_name}</h6>
 							<p className="text-muted">{user.first_name + ' ' + user.last_name+ ' - ' + 'CSSA'}</p>
 						</div>
 						<span className="settings-tray--right">
-						   <i className="material-icons">cached</i>
-								<i className="material-icons">message</i>
-												<i className="material-icons">menu</i>
+						   <label className="switch">
+								<input type="checkbox" onClick={() => {this.setState({connection_status: !this.state.connection_status})}}  checked={this.state.connection_status}/>
+  								<span className="slider round1"></span>
+
+							</label>
+							<span className="p-2 font-weight-bold">{this.state.connection_status? 'Online': 'Offline'}</span>
 						</span>
 					</div>
 				</div>
@@ -495,22 +497,28 @@ class AllChatsComponent extends React.Component {
 			<div className="col-md-8">
 				<div className="settings-tray">
 					<div className="friend-drawer no-gutters friend-drawer--grey">
-						<img className="profile-image"
-							 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>
+						{/*<img className="profile-image"*/}
+						{/*	 src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt=""/>*/}
+						<i className='fa fa-user-circle' style={{fontSize: '40px'}}/>
 						<div className="text">
 							<h6>{loaded_chat.customer_name}</h6>
 							<p className="text-muted">Email - {loaded_chat.customer_email}</p>
 						</div>
 						<span className="settings-tray--right">
-                   			<i className="material-icons" onClick={() => this.closeChat(loaded_chat._id)}>cached</i>
-                        	<i className="material-icons">message</i>
-							<i className="material-icons">menu</i>
+							<label className="switch">
+								<input type="checkbox" onClick={() => {this.setState({connection_status: !this.state.connection_status})}}  checked={this.state.connection_status}/>
+  								<span className="slider round1"></span>
+
+							</label>
+							<span className="p-2 font-weight-bold">{this.state.connection_status? 'Online': 'Offline'}</span>
                 		</span>
+						<i className="material-icons ml-4 cursor font-weight-bold" style={{cursor: 'pointer'}} onClick={() => this.closeChat(loaded_chat._id)}>close</i>
 					</div>
 				</div>
 				<div className="chat-panel">
-					{chatMessages}
-
+					<div className='overflow-auto' style={{height: '480px'}}>
+						{chatMessages}
+					</div>
 					<div className="row">
 						<div className="col-12">
 							<div className="chat-box-tray">
@@ -536,7 +544,8 @@ class AllChatsComponent extends React.Component {
 			return (
 				<React.Fragment key={chat._id}>
 					<div className={this.determineChatClass(chat)} onClick={() => this.loadChat(chat._id)}>
-						<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="" />
+						{/*<img className="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg" alt="" />*/}
+						<i className='fa fa-user-circle' style={{fontSize: '40px'}}/>
 						<div className="text">
 							<h6>{chat.customer_name} {!chat.is_seen_by_cssa ? <span className="badge badge-success">New</span> : ''}</h6>
 							<p className="text-muted">{chat.title_question}</p>

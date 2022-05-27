@@ -20,9 +20,10 @@ body {
     border-radius: 40px;
   }
   .settings-tray {
-    background: #eee;
+    background: #c2bec5;
     padding: 10px 15px;
     border-radius: 7px;
+    height: 60px;
   }
   .settings-tray .no-gutters {
     padding: 0;
@@ -78,7 +79,7 @@ body {
     transition: 0.3s ease;
   }
   .friend-drawer--grey {
-    background: #eee;
+    background: #c2bec5;
   }
   .friend-drawer .text {
     margin-left: 12px;
@@ -208,4 +209,64 @@ body {
     color: #e3e3e3;
     background-color: #284a60;
   }
-  
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #20b60c;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #20b60c;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(17px);
+  -ms-transform: translateX(17px);
+  transform: translateX(17px);
+}
+
+/* Rounded sliders */
+.slider.round1 {
+  border-radius: 34px;
+}
+
+.slider.round1:before {
+  border-radius: 50%;
+}

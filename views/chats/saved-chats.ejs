@@ -13,9 +13,9 @@
 
 <body class="">
 <div class="wrapper">
-    <%- include('../components/sidebar.ejs'); %>
+    <%- include('../components/sidebar.ejs', {slug: 'archives'}); %>
     <div class="main-panel">
-        <%- include('../components/navbar.ejs'); %>
+        <%- include('../components/navbar.ejs', {name: 'Archives', url: '/chat/archives'}); %>
         <div class="content">
             <div class="container-fluid">
                 <!--Content goes here-->

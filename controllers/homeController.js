@@ -17,9 +17,14 @@ const viewChatIntegration = (req, res) => {
 	res.render('home/integration.ejs');
 };
 
+const render404 = (req, res) => {
+	res.render('errors/404.ejs');
+};
+
 module.exports = {
 	viewHome,
 	viewDashboard,
 	viewSignupPage,
-	viewChatIntegration
+	viewChatIntegration,
+	render404
 };

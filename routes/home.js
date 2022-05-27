@@ -11,5 +11,6 @@ router.get('/register', authMiddleware.guestOnly, homeController.viewSignupPage)
 router.get('/dashboard', authMiddleware.ensureAuthenticated, homeController.viewDashboard);
 router.get('/integration', authMiddleware.ensureAuthenticated, homeController.viewChatIntegration);
 router.get('/logout', authMiddleware.ensureAuthenticated, userController.handleLogout);
+router.get('/404', homeController.render404);
 
 module.exports = router;

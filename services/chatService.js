@@ -26,12 +26,12 @@ const markChatSeenByCSSA = async (chat_id) => {
 
 
 
-const getAllChats = async () => {
-	return await chatRepository.getAllChats();
+const getAllChats = async (company_id) => {
+	return await chatRepository.getAllChats(company_id);
 };
 
-const getAllmsgs = async () => {
-	return await chatRepository.getAllmsgs();
+const getAllmsgs = async (company_id) => {
+	return await chatRepository.getAllmsgs(company_id);
 };
 
 const addChatReview= async (data) => {

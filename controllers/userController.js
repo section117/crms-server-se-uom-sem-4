@@ -5,6 +5,10 @@ const sessionHelper = require("../helpers/session-helper");
 
 const bcrypt = require("bcrypt");
 const { exist } = require("joi");
+const {
+  userValidateSchema,
+  companyValidateSchema,
+} = require("../helpers/validate-schema");
 const saltRounds = 10;
 
 const login = passport.authenticate("local", {
@@ -20,8 +24,11 @@ const logout = (req, res) => {
 
 const register = async (req, res) => {
   //with bcrypt
-  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-
+  const hashedPassword =
+    req.body.password.trim() !== ""
+      ? await bcrypt.hash(req.body.password, saltRounds)
+      : "";
+  console.log(req.body.password === "");
   const newUser = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
@@ -30,6 +37,22 @@ const register = async (req, res) => {
     password: hashedPassword,
   };
 
+  const { error, value } = userValidateSchema.validate(newUser, {
+    abortEarly: false,
+  });
+  if (error)
+    return res
+      .status(400)
+      .json({ status: "Failed", data: error.details[0].message });
+
+  const checkUser = await userService.getUserByEmail(newUser.email);
+
+  if (checkUser) {
+    return res
+      .status(409)
+      .json({ status: "Failed", data: "Email already exists !" });
+  }
+
   if (newUser.user_type == "COMPANY_OWNER") {
     const newCompany = {
       company_name: req.body.company_name,
@@ -37,6 +60,13 @@ const register = async (req, res) => {
       website: req.body.website,
       address: req.body.address,
     };
+    const { error, value } = companyValidateSchema.validate(newCompany, {
+      abortEarly: false,
+    });
+    if (error)
+      return res
+        .status(400)
+        .json({ status: "Failed", data: error.details[0].message });
 
     const company = await userService.saveCompany(newCompany);
     const owner = await userService.saveUser(newUser);
@@ -48,7 +78,6 @@ const register = async (req, res) => {
     }
   } else {
     newUser.company = req.session.passport.user.company;
-    console.log("A CSSA");
     const cssa = await userService.saveUser(newUser);
     console.log(cssa);
     if (cssa) {
@@ -95,12 +124,13 @@ const updateUser = async (req, res) => {
     last_name: req.body.last_name,
   };
 
-  const company_details = {
-    company_name: req.body.company_name,
-    company_email: req.body.company_email,
-    website: req.body.website,
-    address: req.body.address,
-  };
+  const { error, value } = userValidateSchema.validate(user_details, {
+    abortEarly: false,
+  });
+  if (error)
+    return res
+      .status(400)
+      .json({ status: "Failed", data: error.details[0].message });
 
   if (req.body.currentPassword && req.body.newPassword) {
     const result = await bcrypt.compare(
@@ -115,13 +145,25 @@ const updateUser = async (req, res) => {
       user_details.password = hashedPassword;
       console.log("Password match");
     } else {
-      console.log("Password mismatch");
-      return res.redirect("/profile");
+      return res
+        .status(401)
+        .json({ status: "Failed", data: "Current password is wrong" });
     }
   }
   await userService.updateUser(current_user._id, user_details);
   if (current_user.user_type == "COMPANY_OWNER") {
     const company_id = current_user.company._id;
+
+    const company_details = {
+      company_name: req.body.company_name,
+      company_email: req.body.company_email,
+      website: req.body.website,
+      address: req.body.address,
+    };
+    const { error, value } = companyValidateSchema.validate(company_details, {
+      abortEarly: false,
+    });
+
     await userService.updateCompany(company_id, company_details);
   }
 

@@ -1,8 +1,9 @@
-const { Chat } = require("../models/chat");
-const { User } = require("../models/user");
-const { ChatMessage } = require("../models/chat-message");
-const mongoose = require("mongoose");
-const { Company } = require("../models/company");
+/* eslint-disable no-unused-vars */
+const { Chat } = require('../models/chat');
+const { User } = require('../models/user');
+const { ChatMessage } = require('../models/chat-message');
+const mongoose = require('mongoose');
+const { Company } = require('../models/company');
 const ObjectId = mongoose.Types.ObjectId;
 
 const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
@@ -10,11 +11,11 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 		const chats = await Chat.aggregate([
 			{
 				$match: {
-					$and: [ {status: chat_status}, {assigned_cssa: ObjectId(user_id) } ]
-				}
+					$and: [{ status: chat_status }, { assigned_cssa: ObjectId(user_id) }],
+				},
 			},
 			{
-				$sort: {updated_at: -1}
+				$sort: { updated_at: -1 },
 			},
 			{
 				$lookup: {
@@ -23,11 +24,11 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 					foreignField: 'chat_id',
 					as: 'chat_messages',
 				},
-			}
+			},
 		]).exec();
 
 		return chats;
-	}catch (error) {
+	} catch (error) {
 		console.log(error);
 		return [];
 	}
@@ -35,87 +36,90 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 
 //company validation
 const validateCompany = async (company_id) => {
-  try {
-    return await Company.findOne({ _id: ObjectId(company_id) });
-  } catch (e) {
-    return null;
-  }
+	try {
+		return await Company.findOne({ _id: ObjectId(company_id) });
+	} catch (e) {
+		return null;
+	}
 };
 
 //assign a CSSA to a chat
 const assignCSSA = async (company_id) => {
-  console.log("company id", company_id);
-  try {
-    return await User.findOne(
-      {
-        $and: [
-          { user_type: "CSSA" },
-          { is_online: true },
-          { company: ObjectId(company_id) },
-        ],
-      },
-      {
-        _id: 1,
-        first_name: 1,
-        last_name: 1,
-        email: 1,
-        profile_pic: 1,
-        company: 1,
-        is_online: 1,
-      }
-    );
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+	console.log('company id', company_id);
+	try {
+		return await User.findOne(
+			{
+				$and: [
+					{ user_type: 'CSSA' },
+					{ is_online: true },
+					{ company: ObjectId(company_id) },
+				],
+			},
+			{
+				_id: 1,
+				first_name: 1,
+				last_name: 1,
+				email: 1,
+				profile_pic: 1,
+				company: 1,
+				is_online: 1,
+			}
+		);
+	} catch (err) {
+		console.log(err);
+		return null;
+	}
 };
 
 //choose random CSSA for chat
 const assignRandomCSSA = async (company_id) => {
-  try {
-    return await User.aggregate([
-      {
-        $match: {
-          $and: [
-            { user_type: "CSSA" },
-            { is_online: true },
-            { company: ObjectId(company_id) },
-          ],
-        },
-      },
-      {
-        $sample: { size: 1 },
-      },
-    ]);
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
+	try {
+		return await User.aggregate([
+			{
+				$match: {
+					$and: [
+						{ user_type: 'CSSA' },
+						{ is_online: true },
+						{ company: ObjectId(company_id) },
+					],
+				},
+			},
+			{
+				$sample: { size: 1 },
+			},
+		]);
+	} catch (e) {
+		console.log(e);
+		return null;
+	}
 };
 
 //create new chat
-const initNewChat = async (customer_name, customer_email, title_ques, company_id) => {
+const initNewChat = async (
+	customer_name,
+	customer_email,
+	title_ques,
+	company_id
+) => {
 	//check if company exists
 	let company;
 	try {
 		company = await validateCompany(company_id);
-	}catch (error) {
+	} catch (error) {
 		console.log(error);
 	}
 
-	if(!company){
-		return {error: 'NO_COMPANY', chat: null};
+	if (!company) {
+		return { error: 'NO_COMPANY', chat: null };
 	}
 
 	//get available CSSA
 	let cssa;
 	try {
 		cssa = await assignCSSA(company_id);
-	}catch (error) {
+	} catch (error) {
 		console.log(error);
 	}
-
-
 
 	//choose random cssa ---------------------------------------------------
 
@@ -127,9 +131,8 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 
 	//----------------------------------------------------------------------
 
-
-	if(!cssa) {
-		return {error: 'NO_CSSA', chat: null};
+	if (!cssa) {
+		return { error: 'NO_CSSA', chat: null };
 	}
 
 	//create new chat
@@ -148,51 +151,57 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 
 	try {
 		const newChat = await chat.save();
-		return {chat: newChat, cssa: cssa};
+		return { chat: newChat, cssa: cssa };
 	} catch (err) {
 		console.log(err);
-		return {error: 'ERROR_CREATING_CHAT', chat: null};
+		return { error: 'ERROR_CREATING_CHAT', chat: null };
 	}
-
 };
 //check if a given chat is available
-const findChatByID = async chatID => {
+const findChatByID = async (chatID) => {
 	try {
-		const chat = await Chat.find({_id : chatID});
+		const chat = await Chat.find({ _id: chatID });
 		return chat;
-	}catch (error) {
+	} catch (error) {
 		console.log(error);
 		return null;
 	}
 };
 
 const closeChat = async (chat_id) => {
-	try{
-		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {status: 'CLOSED'}, {new: true});
+	try {
+		const chat = await Chat.findOneAndUpdate(
+			{ _id: ObjectId(chat_id) },
+			{ status: 'CLOSED' },
+			{ new: true }
+		);
 		return chat;
 	} catch (e) {
 		console.log(e);
 		return null;
 	}
-
 };
 
 const markChatSeenByCSSA = async (chat_id) => {
 	try {
-		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {is_seen_by_cssa: true}, {new: true});
+		const chat = await Chat.findOneAndUpdate(
+			{ _id: ObjectId(chat_id) },
+			{ is_seen_by_cssa: true },
+			{ new: true }
+		);
 		return chat;
-	}catch (e){
+	} catch (e) {
 		console.log(e);
 		return null;
 	}
 };
 
-
-const getAllChats = async () => {
+const getAllChats = async (company_id,cssa_id) => {
 	try {
-		const chat = await Chat.find();
-		return chat;
-	}catch (e){
+
+		const chats = await cssa_id ? Chat.find({ company: ObjectId(company_id),assigned_cssa:cssa_id,status:'CLOSED' }):Chat.find({ company: ObjectId(company_id),status:'CLOSED'});
+		return chats;
+	} catch (e) {
 		console.log(e);
 		return [];
 	}
@@ -200,30 +209,30 @@ const getAllChats = async () => {
 
 //update chat with customer review
 const updateChatWithCustomerReview = async (chat_id, customer_review) => {
-  const review = {
-    is_resolved: customer_review.is_resolved,
-    is_satisfied: customer_review.is_satisfied,
-    customer_message: customer_review.customer_message,
-  };
-  try {
-    return await Chat.findOneAndUpdate(
-      { _id: ObjectId(chat_id) },
-      { review: review },
-      { new: true }
-    );
-  } catch (e) {
-    console.log("error here", e);
-    return null;
-  }
+	const review = {
+		is_resolved: customer_review.is_resolved,
+		is_satisfied: customer_review.is_satisfied,
+		customer_message: customer_review.customer_message,
+	};
+	try {
+		return await Chat.findOneAndUpdate(
+			{ _id: ObjectId(chat_id) },
+			{ review: review },
+			{ new: true }
+		);
+	} catch (e) {
+		console.log('error here', e);
+		return null;
+	}
 };
 
 const getAllmsgs = async (company_id) => {
-  try {
-    const msgs = await ChatMessage.find({ company_id: company_id });
-    return msgs;
-  } catch (e) {
-    return null;
-  }
+	try {
+		const msgs = await ChatMessage.find({ company_id: company_id });
+		return msgs;
+	} catch (e) {
+		return null;
+	}
 };
 
 exports.getChatsOfCSSAWithMessages = getChatsOfCSSAWithMessages;

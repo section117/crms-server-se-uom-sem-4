@@ -448,11 +448,10 @@ class AllChatsComponent extends React.Component {
 						</div>
 						<span className="settings-tray--right">
 						   <label className="switch">
-								<input type="checkbox" onClick={() => {this.setState({connection_status: !this.state.connection_status})}}  checked={this.state.connection_status}/>
-  								<span className="slider round1"></span>
-
+								<input type="checkbox" onClick={() => {this.toggleOnlineStatus()}}  checked={this.state.is_online}/>
+  								<span className="slider round1"/>
 							</label>
-							<span className="p-2 font-weight-bold">{this.state.connection_status? 'Online': 'Offline'}</span>
+							<span className="p-2 font-weight-bold">{this.state.is_online? 'Online': 'Offline'}</span>
 						</span>
 					</div>
 				</div>
@@ -506,11 +505,10 @@ class AllChatsComponent extends React.Component {
 						</div>
 						<span className="settings-tray--right">
 							<label className="switch">
-								<input type="checkbox" onClick={() => {this.setState({connection_status: !this.state.connection_status})}}  checked={this.state.connection_status}/>
-  								<span className="slider round1"></span>
-
+								<input type="checkbox" onClick={() => {this.toggleOnlineStatus()}}  checked={this.state.is_online}/>
+  								<span className="slider round1"/>
 							</label>
-							<span className="p-2 font-weight-bold">{this.state.connection_status? 'Online': 'Offline'}</span>
+							<span className="p-2 font-weight-bold">{this.state.is_online? 'Online': 'Offline'}</span>
                 		</span>
 						<i className="material-icons ml-4 cursor font-weight-bold" style={{cursor: 'pointer'}} onClick={() => this.closeChat(loaded_chat._id)}>close</i>
 					</div>

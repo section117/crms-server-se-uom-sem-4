@@ -130,6 +130,8 @@ const deleteUser = async (user_id) => {
 
 };
 
+
+
 exports.getUserByEmail = getUserByEmail;
 exports.saveUser = saveUser;
 exports.saveCompany = saveCompany;

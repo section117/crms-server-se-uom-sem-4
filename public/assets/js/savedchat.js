@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 
+
 /* eslint-disable no-undef */
 let loaded_chats = [];
 var chatelements = document.getElementsByClassName('selectchats');
@@ -26,6 +27,7 @@ function generate_message_components(messages) {
 			div3.classList.add('chat-bubble--right');
 		}
 
+
 		div1.appendChild(div2);
 		div2.appendChild(div3);
 
@@ -44,6 +46,7 @@ let loadMessages = async function(){
 		loaded = generate_message_components(msgs);
 		loaded_chats.push(attribute);
 	}
+
 
 };
 

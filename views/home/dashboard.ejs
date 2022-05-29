@@ -10,15 +10,160 @@
     <div class="wrapper">
         <%- include('../components/sidebar.ejs', {slug: 'dashboard'}); %>
             <div class="main-panel">
-                <%- include('../components/navbar.ejs', {name: 'Dashboard', url: '/dashboard'}); %>
+                <%- include('../components/navbar.ejs', {name: 'Dashboard', url: '/dashboard', user: user}); %>
                     <div class="content">
                         <div class="container-fluid">
                             <!--Content goes here-->
+                            <% if (user.user_type === 'COMPANY_OWNER') { %>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-warning card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">people</i>
+                                                </div>
+                                                <p class="card-category">Number of Customers</p>
+                                                <h3 class="card-title">
+                                                    <%= currentMonthChats + '/' + allChats %>
+<!--                                                    <small>GB</small>-->
+                                                </h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">today</i>
+                                                     For the Month of <%= (new Date()).toLocaleString('default', {month: 'long'}) %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-success card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">support_agent</i>
+                                                </div>
+                                                <p class="card-category">All CSSA</p>
+                                                <h3 class="card-title"><%= numberOfCSSA%></h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">tag</i>
+                                                    of Support Agents
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-info card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">mood</i>
+                                                </div>
+                                                <p class="card-category">Positive Feedback </p>
+                                                <h3 class="card-title"><%= currentMontPositiveFeedback + '/'+ positiveFeedback%></h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">today</i>
+                                                    For the Month of <%= (new Date()).toLocaleString('default', {month: 'long'}) %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-danger card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">mood_bad</i>
+                                                </div>
+                                                <p class="card-category">Negative Feedback</p>
+                                                <h3 class="card-title"><%= currentMonthNegativeFeedback + '/'+ negativeFeedback%></h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">today</i>
+                                                    For the Month of <%= (new Date()).toLocaleString('default', {month: 'long'}) %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } else {%>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-warning card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">question_answer</i>
+                                                </div>
+                                                <p class="card-category">Active Conversations</p>
+                                                <h3 class="card-title">
+                                                    <%= activeChats %>
+<!--                                                    <small>GB</small>-->
+                                                </h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons text-danger">warning</i>
+                                                    <a href="javascript:;">Respond ASAP</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-success card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">archive</i>
+                                                </div>
+                                                <p class="card-category">Archived Conversations</p>
+                                                <h3 class="card-title"><%= closedChats %></h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">date_range</i> See Feedback
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-info card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">mood</i>
+                                                </div>
+                                                <p class="card-category">Positive Feedback </p>
+                                                <h3 class="card-title"><%= positiveFeedback %></h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">favorite</i> Keep Up The Good Work
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-danger card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">mood_bad</i>
+                                                </div>
+                                                <p class="card-category">Negative Feedback</p>
+                                                <h3 class="card-title"><%= negativeFeedback %></h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">heart_broken</i> Try to Make It Better
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }%>
 
                             <!--End content-->
                         </div>
                     </div>
-                    <%- include('../components/footer.ejs'); %>
             </div>
     </div>
         <%- include('../components/js-scripts.ejs'); %>

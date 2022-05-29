@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
 const { Chat } = require('../models/chat');
 const { User } = require('../models/user');
 const { ChatMessage } = require('../models/chat-message');
 const mongoose = require('mongoose');
 const { Company } = require('../models/company');
+const {getThisMonthChats} = require('../services/chatService');
 const ObjectId = mongoose.Types.ObjectId;
 
 const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
@@ -196,6 +196,7 @@ const markChatSeenByCSSA = async (chat_id) => {
 	}
 };
 
+
 const getAllChats = async (company_id,cssa_id) => {
 	try {
 		let chats=[];
@@ -239,6 +240,54 @@ const getAllmsgs = async (company_id) => {
 	}
 };
 
+const getReviewsForCSSA = async (user_id, status) => {
+	try {
+		return await Chat.find({assigned_cssa: user_id, 'review.is_satisfied': status});
+	} catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+
+const getReviewsForCompany = async (company_id, status) => {
+	try {
+		return await Chat.find({company: company_id, 'review.is_satisfied': status});
+	} catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+
+const getCurrentMonthChats = async (company_id) => {
+	try {
+		return await Chat.find(
+			{company: company_id, $and: [
+				{
+					$expr: {$eq: [{$month: '$updated_at'}, {$month: new Date()}]}
+				},
+				{
+					$expr: {$eq: [{$year: '$updated_at'}, {$year: new Date()}]}
+				},
+					
+			]},
+		);
+	} catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+
+const getCurrentMonthFeedback = async (company_id, status) => {
+	try{
+		return await Chat.find({company: company_id, 'review.is_satisfied': status});
+	}catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+
+
+
 exports.getChatsOfCSSAWithMessages = getChatsOfCSSAWithMessages;
 exports.closeChat = closeChat;
 exports.markChatSeenByCSSA = markChatSeenByCSSA;
@@ -247,3 +296,7 @@ exports.findChatByID = findChatByID;
 exports.updateChatWithCustomerReview = updateChatWithCustomerReview;
 exports.getAllmsgs = getAllmsgs;
 exports.getAllChats = getAllChats;
+exports.getReviewsForCSSA = getReviewsForCSSA;
+exports.getCurrentMonthChats = getCurrentMonthChats;
+exports.getCurrentMonthFeedback = getCurrentMonthFeedback;
+exports.getReviewsForCompany = getReviewsForCompany;

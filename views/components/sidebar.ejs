@@ -31,30 +31,36 @@
           <p>Integration</p>
         </a>
       </li>
+      <% if (renderOnlyForRole(user, 'CSSA')) { %>
       <li class="nav-item <% if(slug && slug === 'chats'){ %> active <% } %>">
         <a class="nav-link" href="/chats">
           <i class="material-icons">chat</i>
           <p>Chats</p>
         </a>
       </li>
+      <% } %>
+      <% if (renderOnlyForRole(user, 'CSSA')) { %>
       <li class="nav-item <% if(slug && slug === 'archives'){ %> active <% } %>">
         <a class="nav-link" href="/chats/archives">
           <i class="material-icons">archive</i>
           <p>Archives</p>
         </a>
       </li>
+      <% } %>
       <li class="nav-item <% if(slug && slug === 'profile'){ %> active <% } %>">
         <a class="nav-link" href="/profile">
           <i class="material-icons">person</i>
           <p>Profile</p>
         </a>
       </li>
-      <li class="nav-item <% if(slug && slug === 'manage-cssa'){ %> active <% } %>">
-        <a class="nav-link" href="/manage-cssa">
-          <i class="material-icons">people</i>
-          <p>CSSA Management</p>
-        </a>
-      </li>
+      <% if (renderOnlyForRole(user, 'COMPANY_OWNER')) { %>
+        <li class="nav-item <% if(slug && slug === 'manage-cssa'){ %> active <% } %>">
+          <a class="nav-link" href="/manage-cssa">
+            <i class="material-icons">people</i>
+            <p>CSSA Management</p>
+          </a>
+        </li>
+      <% } %>
     </ul>
     <ul class="nav">
       <li class="nav-item">

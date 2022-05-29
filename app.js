@@ -17,6 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 //Set up EJS
 app.set('view-engine', 'ejs');
 app.use(express.static('public'));
+//Adding view layer helper files to app.locals space
+app.locals = require('./helpers/views-helper');
 
 //Set up Session
 app.use(getExpressSessionStore());
@@ -34,6 +36,11 @@ mongoose.connect(process.env.DB_CONNECTION_STRING)
 app.use(passport.initialize({}));
 app.use(passport.session({}));
 app.use(flash());
+//Set up a middleware to pass the session user object to response's locals space
+//To be accessed in view layer
+const { storeSessionToLocals } = require('./middlewares/authMiddlewares');
+app.use(storeSessionToLocals);
+
 //Set Routers
 const homeRouter = require('./routes/home');
 const userRouter = require('./routes/user');

@@ -7,7 +7,7 @@ const authMiddleware = require('../middlewares/authMiddlewares');
 
 router.get('/', authMiddleware.ensureAuthenticated, chatsController.viewAllChats);
 
-router.get('/archives', authMiddleware.ensureAuthenticated, chatsController.viewSavedChats);
+router.get('/archives', authMiddleware.ensureAuthenticated, chatsController.viewArchivedChats);
 
 //REST Endpoints for React Chat Component
 router.get('/active-chats-cssa', authMiddleware.ensureAuthenticated, chatsController.getActiveChatsOfCSSA);

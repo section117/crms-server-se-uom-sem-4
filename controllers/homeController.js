@@ -6,7 +6,8 @@ const viewHome = (req, res) => {
 };
 
 const viewSignupPage = (req, res) => {
-	res.render('home/register.ejs');
+	const message = req.flash('message');
+	res.render('home/register.ejs',{message});
 };
 
 const viewDashboard = async (req, res) => {

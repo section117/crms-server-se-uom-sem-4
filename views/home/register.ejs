@@ -31,7 +31,15 @@
                         <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                             <p class="lead fw-normal mb-3 me-3 h2 font-weight-bold">Sign Up</p>
                         </div>
-
+                        <% if (message!=null) { %>
+                         
+                            <!-- <div class="alert alert-danger" role="alert"> -->
+                            
+                                <small class="text-danger font-weight-bold"><%- message %> </small>
+                            
+                            <!-- </div> -->
+                        <% } %>
+                        <h4 class="font-weight-bold">Owner details</h4>
                         <div class="form-outline mb-4">
                             <input type="email" id="form3Example3" class="form-control form-control-lg" placeholder=""
                                 name="email" />
@@ -52,9 +60,9 @@
 
 
                         <div class="form-outline mb-4">
-                            <input type="text" id="form3Example3" class="form-control form-control-lg" placeholder=""
+                            <input type="hidden" id="form3Example3" class="form-control form-control-lg" placeholder=""
                                 name="user_type" value="COMPANY_OWNER" readonly="readonly" />
-                            <label class="form-label" for="form3Example3">user type</label>
+                           
                         </div>
 
 
@@ -68,7 +76,7 @@
 
 
                         <!-- company details -->
-                        <h4>Company details</h4>
+                        <h4 class="font-weight-bold">Company details</h4>
 
                         <div class="form-outline mb-4">
                             <input type="text" id="form3Example3" class="form-control form-control-lg" placeholder=""

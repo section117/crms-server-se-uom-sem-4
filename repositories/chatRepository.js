@@ -11,11 +11,11 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 		const chats = await Chat.aggregate([
 			{
 				$match: {
-					$and: [ {status: chat_status}, {assigned_cssa: ObjectId(user_id) } ]
-				}
+					$and: [{ status: chat_status }, { assigned_cssa: ObjectId(user_id) }],
+				},
 			},
 			{
-				$sort: {updated_at: -1}
+				$sort: { updated_at: -1 },
 			},
 			{
 				$lookup: {
@@ -24,11 +24,11 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 					foreignField: 'chat_id',
 					as: 'chat_messages',
 				},
-			}
+			},
 		]).exec();
 
 		return chats;
-	}catch (error) {
+	} catch (error) {
 		console.log(error);
 		return [];
 	}
@@ -95,28 +95,31 @@ const assignRandomCSSA = async (company_id) => {
 };
 
 //create new chat
-const initNewChat = async (customer_name, customer_email, title_ques, company_id) => {
+const initNewChat = async (
+	customer_name,
+	customer_email,
+	title_ques,
+	company_id
+) => {
 	//check if company exists
 	let company;
 	try {
 		company = await validateCompany(company_id);
-	}catch (error) {
+	} catch (error) {
 		console.log(error);
 	}
 
-	if(!company){
-		return {error: 'NO_COMPANY', chat: null};
+	if (!company) {
+		return { error: 'NO_COMPANY', chat: null };
 	}
 
 	//get available CSSA
 	let cssa;
 	try {
 		cssa = await assignCSSA(company_id);
-	}catch (error) {
+	} catch (error) {
 		console.log(error);
 	}
-
-
 
 	//choose random cssa ---------------------------------------------------
 
@@ -128,9 +131,8 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 
 	//----------------------------------------------------------------------
 
-
-	if(!cssa) {
-		return {error: 'NO_CSSA', chat: null};
+	if (!cssa) {
+		return { error: 'NO_CSSA', chat: null };
 	}
 
 	//create new chat
@@ -149,50 +151,62 @@ const initNewChat = async (customer_name, customer_email, title_ques, company_id
 
 	try {
 		const newChat = await chat.save();
-		return {chat: newChat, cssa: cssa};
+		return { chat: newChat, cssa: cssa };
 	} catch (err) {
 		console.log(err);
-		return {error: 'ERROR_CREATING_CHAT', chat: null};
+		return { error: 'ERROR_CREATING_CHAT', chat: null };
 	}
-
 };
 //check if a given chat is available
-const findChatByID = async chatID => {
+const findChatByID = async (chatID) => {
 	try {
-		const chat = await Chat.find({_id : chatID});
+		const chat = await Chat.find({ _id: chatID });
 		return chat;
-	}catch (error) {
+	} catch (error) {
 		console.log(error);
 		return null;
 	}
 };
 
 const closeChat = async (chat_id) => {
-	try{
-		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {status: 'CLOSED'}, {new: true});
+	try {
+		const chat = await Chat.findOneAndUpdate(
+			{ _id: ObjectId(chat_id) },
+			{ status: 'CLOSED' },
+			{ new: true }
+		);
 		return chat;
 	} catch (e) {
 		console.log(e);
 		return null;
 	}
-
 };
 
 const markChatSeenByCSSA = async (chat_id) => {
 	try {
-		const chat = await Chat.findOneAndUpdate({_id: ObjectId(chat_id)}, {is_seen_by_cssa: true}, {new: true});
+		const chat = await Chat.findOneAndUpdate(
+			{ _id: ObjectId(chat_id) },
+			{ is_seen_by_cssa: true },
+			{ new: true }
+		);
 		return chat;
-	}catch (e){
+	} catch (e) {
 		console.log(e);
 		return null;
 	}
 };
 
 
-const getAllChats = async (company_id) => {
+const getAllChats = async (company_id,cssa_id) => {
 	try {
-		return await Chat.find({company: ObjectId(company_id)});
-	}catch (e){
+		let chats=[];
+		if(cssa_id){
+			chats = Chat.find({ company: ObjectId(company_id),assigned_cssa:cssa_id,status:'CLOSED' });}
+		else{
+			chats = Chat.find({ company: ObjectId(company_id),status:'CLOSED'});
+		}
+		return chats;
+	} catch (e) {
 		console.log(e);
 		return [];
 	}
@@ -219,7 +233,8 @@ const updateChatWithCustomerReview = async (chat_id, customer_review) => {
 
 const getAllmsgs = async (company_id) => {
 	try {
-		return await ChatMessage.find({company_id: company_id});
+		const msgs = await ChatMessage.find({ company_id: company_id });
+		return msgs;
 	} catch (e) {
 		return null;
 	}
@@ -233,6 +248,7 @@ const getReviewsForCSSA = async (user_id, status) => {
 		return [];
 	}
 };
+
 const getReviewsForCompany = async (company_id, status) => {
 	try {
 		return await Chat.find({company: company_id, 'review.is_satisfied': status});

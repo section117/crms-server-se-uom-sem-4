@@ -9,11 +9,22 @@
       <%- include('../components/sidebar.ejs', {slug: 'manage-cssa'}); %>
       <div class="main-panel">
         <%- include('../components/navbar.ejs', {name: 'CSSA Management', url: '/manage-cssa'}); %>
-        <div class="container">
-          <h2 class="mt-5 font-weight-bold">Manage your CSSAs</h2>
+        <div class="content">
+          <div class="container-fluid">
+          <h2 class="font-weight-bold">Manage your CSSAs</h2>
           <div class="container d-flex">
             <div class="col-lg-6">
               <h3>Add New CSSA</h3>
+              <% if (message.err != '' || message.success != '') { %>
+                         
+                <div class="alert alert-secondary" role="alert">
+                
+                    <small class="text-<%- message.err != ''?'danger':'success' %>  font-weight-bold"><%- message.err != ''?message.err:message.success %> </small>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <% } %>
               <form class="pr-5" method="post" action="">
                 <div class="form-outline mb-4">
                   <input
@@ -73,6 +84,10 @@
             <div class="col-lg-6">
               <h3>Available CSSAs</h3>
               <div class="container">
+                <% if (cssa_list.length == 0) { %>
+                 <p class="text-primary">No CSSAs available for your company</p>
+                <% } else { %>
+                 
                 <% cssa_list.forEach(cssa => { %>
                 <div class="card pd-4 m-1">
                   <div class="d-flex">
@@ -103,11 +118,13 @@
                     </div>
                   </div>
                 </div>
-                <% }) %>
+                <% }) }%>
               </div>
             </div>
           </div>
         </div>
+        </div>
+        <%- include('../components/footer.ejs'); %>
       </div>
     </div>
     <%- include('../components/js-scripts.ejs'); %>

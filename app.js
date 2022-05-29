@@ -5,7 +5,7 @@ const passport = require('passport');
 const { createServer } = require('http');
 const morgan = require('morgan');
 const cors = require('cors');
-
+const flash = require('connect-flash');
 require('dotenv').config();
 
 const app = express();
@@ -35,6 +35,7 @@ mongoose.connect(process.env.DB_CONNECTION_STRING)
 //Set up Passport
 app.use(passport.initialize({}));
 app.use(passport.session({}));
+app.use(flash());
 //Set up a middleware to pass the session user object to response's locals space
 //To be accessed in view layer
 const { storeSessionToLocals } = require('./middlewares/authMiddlewares');
@@ -53,6 +54,7 @@ app.use('/chat-messages', chatMessagesRouter);
 
 //Set up Socket.io
 const { createIO } = require('./config/socket-io/socketio-config');
+const req = require('express/lib/request');
 const httpServer = createServer(app);
 createIO(httpServer);
 

@@ -24,28 +24,15 @@
                     <div class="row no-gutters">
                         <div class="col-md-4 border-right">
                             <div class="settings-tray">
-                                <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg"
-                                    alt="Profile img">
+                                <div class="h6">All Archived Chats</div>
                                 <span class="settings-tray--right">
-                                    <!-- <i class="material-icons">cached</i>
-                                    <i class="material-icons">message</i> -->
-                                    <i class="material-icons">menu</i>
-                                </span>
-                            </div>
-                            <div class="search-box">
-                                <div class="input-wrapper">
-                                    <i class="material-icons">search</i>
-                                    <input placeholder="Search here" type="text">
-                                </div>
+                               </span>
                             </div>
 
-                   
-                          
-
+                            <div class="overflow-auto" style="height: 540px">
                         <% for(var i=0; i<chats.length; i++) {%>
                             <div class="friend-drawer selectchats friend-drawer--onhover" id=<%= chats[i]._id %>>
-                                <img class="profile-image" src="https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg"
-                                    alt="">
+                                <i class='fa fa-user-circle' style='font-size:40px'></i>
                                 <div class="text">
                                     <h6><%= chats[i].customer_name %></h6>
                                     <p class="text-muted"><%= chats[i].title_question %></p>
@@ -54,6 +41,7 @@
                             </div>
                             <hr>
                         <% } %>
+                            </div>
 
 
 
@@ -61,21 +49,19 @@
                         <div class="col-md-8">
                             <div class="settings-tray">
                                 <div class="friend-drawer no-gutters friend-drawer--grey">
-                               
+                                    <i class='fa fa-user-circle' style='font-size:40px'></i>
                                     <div class="text">
-                                        <!-- <h6>Robo Cop</h6>
-                                        <p class="text-muted">Layin' down the law since like before Christ...</p> -->
+                                        <h6><%= chats[i].%></h6>
+                                        <p class="text-muted">Email - <% %></p>
                                     </div>
                                     <span class="settings-tray--right">
-                                        <!-- <i class="material-icons">cached</i>
-                                        <i class="material-icons">message</i> -->
-                                        <i class="material-icons">menu</i>
                                     </span>
                                 </div>
                             </div>
 
 
                             <div class="chat-panel">
+                                <div class="overflow-auto" style="height: 540px">
                                 <% for(var j=0; j<msgs.length; j++) {%>
                                   
                                     <% if( msgs[j].is_incoming ) {%> 
@@ -92,33 +78,14 @@
                                         <div class="row no-gutters msgs" id=<%= msgs[j].chat_id+j%>>
                                             <div class="col-md-3 offset-md-9">
                                                 <div class="chat-bubble chat-bubble--right">
-                                                    <%= msgs[j].message %> 
-                                                  
+                                                    <%= msgs[j].message %>
                                                 </div>
                                             </div>
                                         </div>
                                     <% } %> 
                                 <% } %>
-                                
-        
 
-
-                          
-                          
-                               
-                               
-                                <div class="row" id="777" style="display: none;">
-                                    <div class="col-12">
-                                        <div class="chat-box-tray">
-                                            <!-- <i class="material-icons">s</i> -->
-                                            <input type="text" placeholder="Type your message here...">
-                                            <!-- <i class="material-icons">mic</i> -->
-                                            <button class="round">send</button>
-                                        </div>
-                                    </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -127,7 +94,6 @@
                 <!--End content-->
             </div>
         </div>
-        <%- include('../components/footer.ejs'); %>
     </div>
 </div>
 

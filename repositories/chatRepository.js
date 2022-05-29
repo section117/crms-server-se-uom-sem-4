@@ -198,8 +198,12 @@ const markChatSeenByCSSA = async (chat_id) => {
 
 const getAllChats = async (company_id,cssa_id) => {
 	try {
-
-		const chats = await cssa_id ? Chat.find({ company: ObjectId(company_id),assigned_cssa:cssa_id,status:'CLOSED' }):Chat.find({ company: ObjectId(company_id),status:'CLOSED'});
+		let chats=[];
+		if(cssa_id){
+			chats = Chat.find({ company: ObjectId(company_id),assigned_cssa:cssa_id,status:'CLOSED' });}
+		else{
+			chats = Chat.find({ company: ObjectId(company_id),status:'CLOSED'});
+		}
 		return chats;
 	} catch (e) {
 		console.log(e);

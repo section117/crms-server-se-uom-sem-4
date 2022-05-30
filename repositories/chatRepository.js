@@ -7,14 +7,14 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 	try {
-		const chats = await Chat.aggregate([
+		return await Chat.aggregate([
 			{
 				$match: {
-					$and: [{ status: chat_status }, { assigned_cssa: ObjectId(user_id) }],
+					$and: [{status: chat_status}, {assigned_cssa: ObjectId(user_id)}],
 				},
 			},
 			{
-				$sort: { updated_at: -1 },
+				$sort: {updated_at: -1},
 			},
 			{
 				$lookup: {
@@ -25,8 +25,6 @@ const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {
 				},
 			},
 		]).exec();
-
-		return chats;
 	} catch (error) {
 		console.log(error);
 		return [];
@@ -159,8 +157,7 @@ const initNewChat = async (
 //check if a given chat is available
 const findChatByID = async (chatID) => {
 	try {
-		const chat = await Chat.find({ _id: chatID });
-		return chat;
+		return await Chat.find({_id: chatID});
 	} catch (error) {
 		console.log(error);
 		return null;
@@ -169,12 +166,11 @@ const findChatByID = async (chatID) => {
 
 const closeChat = async (chat_id) => {
 	try {
-		const chat = await Chat.findOneAndUpdate(
-			{ _id: ObjectId(chat_id) },
-			{ status: 'CLOSED' },
-			{ new: true }
+		return await Chat.findOneAndUpdate(
+			{_id: ObjectId(chat_id)},
+			{status: 'CLOSED'},
+			{new: true}
 		);
-		return chat;
 	} catch (e) {
 		console.log(e);
 		return null;
@@ -183,12 +179,11 @@ const closeChat = async (chat_id) => {
 
 const markChatSeenByCSSA = async (chat_id) => {
 	try {
-		const chat = await Chat.findOneAndUpdate(
-			{ _id: ObjectId(chat_id) },
-			{ is_seen_by_cssa: true },
-			{ new: true }
+		return await Chat.findOneAndUpdate(
+			{_id: ObjectId(chat_id)},
+			{is_seen_by_cssa: true},
+			{new: true}
 		);
-		return chat;
 	} catch (e) {
 		console.log(e);
 		return null;
@@ -198,13 +193,13 @@ const markChatSeenByCSSA = async (chat_id) => {
 
 const getAllChats = async (company_id,cssa_id) => {
 	try {
-		let chats=[];
+
 		if(cssa_id){
-			chats = Chat.find({ company: ObjectId(company_id),assigned_cssa:cssa_id,status:'CLOSED' });}
+			return Chat.find({ company: ObjectId(company_id),assigned_cssa:cssa_id,status:'CLOSED' });}
 		else{
-			chats = Chat.find({ company: ObjectId(company_id),status:'CLOSED'});
+			return Chat.find({ company: ObjectId(company_id),status:'CLOSED'});
 		}
-		return chats;
+
 	} catch (e) {
 		console.log(e);
 		return [];
@@ -232,8 +227,7 @@ const updateChatWithCustomerReview = async (chat_id, customer_review) => {
 
 const getAllmsgs = async (company_id) => {
 	try {
-		const msgs = await ChatMessage.find({ company_id: company_id });
-		return msgs;
+		return await ChatMessage.find({company_id: company_id});
 	} catch (e) {
 		return null;
 	}
@@ -285,6 +279,34 @@ const getCurrentMonthFeedback = async (company_id, status) => {
 	}
 };
 
+const getResolvedFeedbackForCSSA = async (user_id) => {
+	try {
+		return await Chat.find({assigned_cssa: user_id, 'review.is_resolved': true});
+	}catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+const getResolvedFeedbackForCompany = async (company_id) => {
+	try {
+		return await Chat.find({company: company_id, 'review.is_resolved': true});
+	}catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+
+const getAllChatDetails = async (company_id) => {
+	try {
+		return await Chat.find({company: company_id});
+	}catch (e) {
+		console.log(e);
+		return [];
+	}
+};
+
+
+
 
 
 exports.getChatsOfCSSAWithMessages = getChatsOfCSSAWithMessages;
@@ -299,3 +321,6 @@ exports.getReviewsForCSSA = getReviewsForCSSA;
 exports.getCurrentMonthChats = getCurrentMonthChats;
 exports.getCurrentMonthFeedback = getCurrentMonthFeedback;
 exports.getReviewsForCompany = getReviewsForCompany;
+exports.getResolvedFeedbackForCSSA = getResolvedFeedbackForCSSA;
+exports.getAllChatDetails = getAllChatDetails;
+exports.getResolvedFeedbackForCompany = getResolvedFeedbackForCompany;

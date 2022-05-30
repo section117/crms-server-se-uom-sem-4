@@ -21,9 +21,21 @@ let loadMessages = async function(attribute){
     
 };
 
+let setCustomerDetails = async function(element){
+	const chat_id = element.attr('id');
+	if (loaded_chats.length === 0 || !(loaded_chats[loaded_chats.length-1]==chat_id)){
+		const name = element.children('#cust-name').val();
+		const email = element.children('#cust-email').val();
+		console.log(name,email);
+		$('#customer-name').text(name);
+		$('#customer-email').text('Email - '+email);
+	}
+};
 
 $chats = $('.selectchats');
 $chats.click(function () {
+	$('#profile-pic').show();
+	setCustomerDetails($(this));
 	loadMessages($(this).attr('id'));
 });
 

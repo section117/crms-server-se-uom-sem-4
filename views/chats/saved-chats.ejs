@@ -19,7 +19,6 @@
         <div class="content">
             <div class="container-fluid">
                 <!--Content goes here-->
-             
                 <div class="container">
                     <div class="row no-gutters">
                         <div class="col-md-4 border-right">
@@ -37,52 +36,32 @@
                                     <h6><%= chats[i].customer_name %></h6>
                                     <p class="text-muted"><%= chats[i].title_question %></p>
                                 </div>
+                                <input type="hidden" id="cust-name" value=<%- chats[i].customer_name %> >
+                                <input type="hidden" id="cust-email" value=<%- chats[i].customer_email %> >
                                 <span class="time text-muted small">13:21</span>
                             </div>
                             <hr>
                         <% } %>
+                        
                             </div>
-
-
-
                         </div>
                         <div class="col-md-8">
                             <div class="settings-tray">
                                 <div class="friend-drawer no-gutters friend-drawer--grey">
-                                    <i class='fa fa-user-circle' style='font-size:40px'></i>
+                                    <i class='fa fa-user-circle' style='font-size:40px;display: none;' id="profile-pic"></i>
                                     <div class="text">
-                                        <h6><%= chats[i].%></h6>
-                                        <p class="text-muted">Email - <% %></p>
+                                         <h6 id="customer-name"></h6>
+                                        <p id="customer-email" class="text-muted">Select a chat...</p> 
                                     </div>
                                     <span class="settings-tray--right">
                                     </span>
                                 </div>
                             </div>
-
                             <div class="chat-panel">
-                                <div class="overflow-auto" style="height: 540px">
-                                <% for(var j=0; j<msgs.length; j++) {%>
-                                  
-                                    <% if( msgs[j].is_incoming ) {%> 
-                                        <div class="row no-gutters msgs"  id=<%= msgs[j].chat_id+j%>>
-                                            <div class="col-md-3">
-                                                <div class="chat-bubble chat-bubble--left">
-                                                    <%= msgs[j].message %> 
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <% } else{%> 
-                                        <div class="row no-gutters msgs" id=<%= msgs[j].chat_id+j%>>
-                                            <div class="col-md-3 offset-md-9">
-                                                <div class="chat-bubble chat-bubble--right">
-                                                    <%= msgs[j].message %>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <% } %> 
-                                <% } %>
+                                <!-- <div class="overflow-auto" style="height: 540px">
+                               
 
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -96,7 +75,6 @@
 
 <%- include('../components/js-scripts.ejs'); %>
 <script src="../assets/js/loadChats.js"></script>
-
 
 
 

@@ -3,7 +3,6 @@ const { User } = require('../models/user');
 const { ChatMessage } = require('../models/chat-message');
 const mongoose = require('mongoose');
 const { Company } = require('../models/company');
-const {getThisMonthChats} = require('../services/chatService');
 const ObjectId = mongoose.Types.ObjectId;
 
 const getChatsOfCSSAWithMessages = async (user_id, chat_status) => {

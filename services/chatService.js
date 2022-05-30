@@ -6,7 +6,7 @@ const getActiveChatsOfCSSAWithMessages = async (user_id) => {
 
 
 const getClosedChatsOfCSSAWithMessages = async (user_id) => {
-	return await chatRepository.getChatsOfCSSAWithMessages(user_id, 'CLOSE');
+	return await chatRepository.getChatsOfCSSAWithMessages(user_id, 'CLOSED');
 };
 //create a new chat
 
@@ -65,6 +65,18 @@ const getNegativeFeedbackForCompany = async (company_id) => {
 	return await chatRepository.getReviewsForCompany(company_id, false);
 };
 
+const getResolvedFeedbackForCSSA = async (user_id) => {
+	return await chatRepository.getResolvedFeedbackForCSSA(user_id);
+};
+
+const getAllChatDetails = async (company_id) => {
+	return await chatRepository.getAllChatDetails(company_id);
+};
+
+const getResolvedFeedbackForCompany = async (company_id) => {
+	return await chatRepository.getResolvedFeedbackForCompany(company_id);
+};
+
 
 
 exports.getActiveChatsOfCSSAWithMessages = getActiveChatsOfCSSAWithMessages;
@@ -83,3 +95,6 @@ exports.getCurrentMonthPositiveFeedback = getCurrentMonthPositiveFeedback;
 exports.getCurrentMonthNegativeFeedback = getCurrentMonthNegativeFeedback;
 exports.getPositiveFeedbackForCompany = getPositiveFeedbackForCompany;
 exports.getNegativeFeedbackForCompany = getNegativeFeedbackForCompany;
+exports.getResolvedFeedbackForCSSA = getResolvedFeedbackForCSSA;
+exports.getAllChatDetails = getAllChatDetails;
+exports.getResolvedFeedbackForCompany = getResolvedFeedbackForCompany;

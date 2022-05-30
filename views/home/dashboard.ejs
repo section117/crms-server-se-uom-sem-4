@@ -16,7 +16,7 @@
                             <!--Content goes here-->
                             <% if (user.user_type === 'COMPANY_OWNER') { %>
                                 <div class="row">
-                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="card card-stats">
                                             <div class="card-header card-header-warning card-header-icon">
                                                 <div class="card-icon">
@@ -24,19 +24,18 @@
                                                 </div>
                                                 <p class="card-category">Number of Customers</p>
                                                 <h3 class="card-title">
-                                                    <%= currentMonthChats + '/' + allChats %>
+                                                    <%= allChats %>
 <!--                                                    <small>GB</small>-->
                                                 </h3>
                                             </div>
                                             <div class="card-footer">
                                                 <div class="stats">
-                                                    <i class="material-icons">today</i>
-                                                     For the Month of <%= (new Date()).toLocaleString('default', {month: 'long'}) %>
+                                                    <i class="material-icons">supervised_user_circle</i>Total Customers
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="card card-stats">
                                             <div class="card-header card-header-success card-header-icon">
                                                 <div class="card-icon">
@@ -48,19 +47,19 @@
                                             <div class="card-footer">
                                                 <div class="stats">
                                                     <i class="material-icons">tag</i>
-                                                    of Support Agents
+                                                    Total Support Agents
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="card card-stats">
                                             <div class="card-header card-header-info card-header-icon">
                                                 <div class="card-icon">
                                                     <i class="material-icons">mood</i>
                                                 </div>
                                                 <p class="card-category">Positive Feedback </p>
-                                                <h3 class="card-title"><%= currentMontPositiveFeedback + '/'+ positiveFeedback%></h3>
+                                                <h3 class="card-title"><%= currentMontPositiveFeedback %></h3>
                                             </div>
                                             <div class="card-footer">
                                                 <div class="stats">
@@ -70,19 +69,53 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="card card-stats">
                                             <div class="card-header card-header-danger card-header-icon">
                                                 <div class="card-icon">
                                                     <i class="material-icons">mood_bad</i>
                                                 </div>
                                                 <p class="card-category">Negative Feedback</p>
-                                                <h3 class="card-title"><%= currentMonthNegativeFeedback + '/'+ negativeFeedback%></h3>
+                                                <h3 class="card-title"><%= currentMonthNegativeFeedback%></h3>
                                             </div>
                                             <div class="card-footer">
                                                 <div class="stats">
                                                     <i class="material-icons">today</i>
                                                     For the Month of <%= (new Date()).toLocaleString('default', {month: 'long'}) %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-primary card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">sentiment_very_satisfied</i>
+                                                </div>
+                                                <p class="card-category">Customer Satisfaction Rate</p>
+                                                <h3 class="card-title"><%= Math.round(positiveFeedback/allChats * 100)%>%</h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">today</i>
+                                                    From All the Chats
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-warning card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">trending_up</i>
+                                                </div>
+                                                <p class="card-category">Question Resolved Rate</p>
+                                                <h3 class="card-title"><%= Math.round(resolvedFeedback/allChats*100)%>%</h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">today</i>
+                                                    From All the Chats
                                                 </div>
                                             </div>
                                         </div>
@@ -90,7 +123,7 @@
                                 </div>
                             <% } else {%>
                                 <div class="row">
-                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="card card-stats">
                                             <div class="card-header card-header-warning card-header-icon">
                                                 <div class="card-icon">
@@ -105,12 +138,12 @@
                                             <div class="card-footer">
                                                 <div class="stats">
                                                     <i class="material-icons text-danger">warning</i>
-                                                    <a href="javascript:;">Respond ASAP</a>
+                                                    <a href="javascript:">Respond ASAP</a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="card card-stats">
                                             <div class="card-header card-header-success card-header-icon">
                                                 <div class="card-icon">
@@ -126,7 +159,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="card card-stats">
                                             <div class="card-header card-header-info card-header-icon">
                                                 <div class="card-icon">
@@ -142,7 +175,26 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-6 col-sm-6">
+
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-primary card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">trending_up</i>
+                                                </div>
+                                                <p class="card-category">Questions Resolved Rate</p>
+                                                <h3 class="card-title">
+                                                    <%= Math.round(resolvedFeedback/(activeChats + closedChats) * 100) %>%
+                                                </h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">star</i> Higher Rate More Happy
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="card card-stats">
                                             <div class="card-header card-header-danger card-header-icon">
                                                 <div class="card-icon">
@@ -158,6 +210,23 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-6">
+                                        <div class="card card-stats">
+                                            <div class="card-header card-header-warning card-header-icon">
+                                                <div class="card-icon">
+                                                    <i class="material-icons">sentiment_very_satisfied</i>
+                                                </div>
+                                                <p class="card-category">Customer Satisfaction Rate</p>
+                                                <h3 class="card-title"><%= Math.round(positiveFeedback/(activeChats + closedChats) * 100) %>%</h3>
+                                            </div>
+                                            <div class="card-footer">
+                                                <div class="stats">
+                                                    <i class="material-icons">date_range</i> See Feedback
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             <% }%>
 

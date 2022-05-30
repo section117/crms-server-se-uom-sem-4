@@ -30,33 +30,25 @@ class AllChatsComponent extends React.Component {
 
   render() {
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-      className: "container"
-    }, /*#__PURE__*/React.createElement("h1", null, "Connection Status - ", this.state.connection_status ? "Connected" : "Disconnected"), /*#__PURE__*/React.createElement("button", {
-      onClick: this.toggleOnlineStatus
-    }, this.state.is_online ? 'Online' : 'Offline'), /*#__PURE__*/React.createElement("div", {
+      className: "container p-0"
+    }, /*#__PURE__*/React.createElement("div", {
       className: "row no-gutters"
     }, /*#__PURE__*/React.createElement("div", {
       className: "col-md-4 border-right"
     }, /*#__PURE__*/React.createElement("div", {
       className: "settings-tray"
-    }, /*#__PURE__*/React.createElement("img", {
-      className: "profile-image",
-      src: "https://www.clarity-enhanced.net/wp-content/uploads/2020/06/filip.jpg",
-      alt: "Profile img"
-    }), /*#__PURE__*/React.createElement("span", {
-      className: "settings-tray--right"
-    }, /*#__PURE__*/React.createElement("i", {
-      className: "material-icons"
-    }, "menu"))), /*#__PURE__*/React.createElement("div", {
-      className: "search-box"
     }, /*#__PURE__*/React.createElement("div", {
-      className: "input-wrapper"
-    }, /*#__PURE__*/React.createElement("i", {
-      className: "material-icons"
-    }, "search"), /*#__PURE__*/React.createElement("input", {
-      placeholder: "Search here",
-      type: "text"
-    }))), this.renderChats()), this.state.is_initial ? this.renderWelcomeScreen() : this.renderMessages())));
+      className: "h6"
+    }, "Connection Status-", /*#__PURE__*/React.createElement("span", {
+      className: "font-weight-bold font-italic"
+    }, " ", this.state.connection_status ? "Connected " : "Disconnected "), /*#__PURE__*/React.createElement("i", {
+      className: this.state.connection_status ? 'fa fa-circle text-success' : 'fa fa-circle text-danger'
+    }))), /*#__PURE__*/React.createElement("div", {
+      className: "overflow-auto",
+      style: {
+        height: '540px'
+      }
+    }, this.renderChats())), this.state.is_initial ? this.renderWelcomeScreen() : this.renderMessages())));
   }
 
   componentDidMount() {
@@ -121,6 +113,9 @@ class AllChatsComponent extends React.Component {
     socket.on('cssa-chat-seen-response', response => {
       this.listenCSSAChatSeenResponse(response);
     });
+    socket.on('customer-message-send', response => {
+      this.listenCustomerMessageSend(response);
+    });
   }
 
   getUser = async () => {
@@ -148,7 +143,8 @@ class AllChatsComponent extends React.Component {
     } = this.state;
     this.emitToggleOnlineStatus({
       is_online: !is_online,
-      user_id: user._id
+      user_id: user._id,
+      active_chat_ids: this.state.active_chat_ids
     });
   };
   loadChat = async chat_id => {
@@ -398,6 +394,40 @@ class AllChatsComponent extends React.Component {
       socketio
     } = this.state;
     socketio.socket.emit('cssa-typing-indicator-publish', content);
+  };
+  listenCustomerMessageSend = response => {
+    const {
+      chatMessage,
+      chat: updatedChat
+    } = response;
+    let newState = {};
+    let {
+      active_chats,
+      active_chat_ids
+    } = this.state;
+
+    if (chatMessage) {
+      //Add the message to the correct chat
+      newState['active_chats'] = { ...active_chats
+      };
+      let chat;
+
+      if (!newState['active_chats'][chatMessage.chat_id]) {
+        chat = { ...updatedChat
+        };
+        chat['chat_messages'] = [];
+        active_chat_ids = [...active_chat_ids];
+        active_chat_ids.push(chatMessage.chat_id);
+        newState['active_chats'][chatMessage.chat_id] = chat;
+      } else {
+        chat = newState['active_chats'][chatMessage.chat_id];
+      }
+
+      chat['updated_at'] = updatedChat.updated_at;
+      chat['chat_messages'].push(chatMessage);
+      newState['active_chat_ids'] = this.sortChatIDsByUpdateTimestamp(active_chat_ids, newState['active_chats']);
+      this.setState(newState);
+    }
   }; //End - SocketIO Events and EventListeners
 
   determineChatClass = chat => {
@@ -428,23 +458,30 @@ class AllChatsComponent extends React.Component {
         className: "settings-tray"
       }, /*#__PURE__*/React.createElement("div", {
         className: "friend-drawer no-gutters friend-drawer--grey"
-      }, /*#__PURE__*/React.createElement("img", {
-        className: "profile-image",
-        src: "https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg",
-        alt: ""
+      }, /*#__PURE__*/React.createElement("i", {
+        className: "fa fa-user-circle",
+        style: {
+          fontSize: '40px'
+        }
       }), /*#__PURE__*/React.createElement("div", {
         className: "text"
       }, /*#__PURE__*/React.createElement("h6", null, "Welcome, ", user.first_name), /*#__PURE__*/React.createElement("p", {
         className: "text-muted"
       }, user.first_name + ' ' + user.last_name + ' - ' + 'CSSA')), /*#__PURE__*/React.createElement("span", {
         className: "settings-tray--right"
-      }, /*#__PURE__*/React.createElement("i", {
-        className: "material-icons"
-      }, "cached"), /*#__PURE__*/React.createElement("i", {
-        className: "material-icons"
-      }, "message"), /*#__PURE__*/React.createElement("i", {
-        className: "material-icons"
-      }, "menu")))));
+      }, /*#__PURE__*/React.createElement("label", {
+        className: "switch"
+      }, /*#__PURE__*/React.createElement("input", {
+        type: "checkbox",
+        onClick: () => {
+          this.toggleOnlineStatus();
+        },
+        checked: this.state.is_online
+      }), /*#__PURE__*/React.createElement("span", {
+        className: "slider round1"
+      })), /*#__PURE__*/React.createElement("span", {
+        className: "p-2 font-weight-bold"
+      }, this.state.is_online ? 'Online' : 'Offline')))));
     }
   };
   renderMessages = () => {
@@ -484,26 +521,43 @@ class AllChatsComponent extends React.Component {
       className: "settings-tray"
     }, /*#__PURE__*/React.createElement("div", {
       className: "friend-drawer no-gutters friend-drawer--grey"
-    }, /*#__PURE__*/React.createElement("img", {
-      className: "profile-image",
-      src: "https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg",
-      alt: ""
+    }, /*#__PURE__*/React.createElement("i", {
+      className: "fa fa-user-circle",
+      style: {
+        fontSize: '40px'
+      }
     }), /*#__PURE__*/React.createElement("div", {
       className: "text"
     }, /*#__PURE__*/React.createElement("h6", null, loaded_chat.customer_name), /*#__PURE__*/React.createElement("p", {
       className: "text-muted"
     }, "Email - ", loaded_chat.customer_email)), /*#__PURE__*/React.createElement("span", {
       className: "settings-tray--right"
-    }, /*#__PURE__*/React.createElement("i", {
-      className: "material-icons",
+    }, /*#__PURE__*/React.createElement("label", {
+      className: "switch"
+    }, /*#__PURE__*/React.createElement("input", {
+      type: "checkbox",
+      onClick: () => {
+        this.toggleOnlineStatus();
+      },
+      checked: this.state.is_online
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "slider round1"
+    })), /*#__PURE__*/React.createElement("span", {
+      className: "p-2 font-weight-bold"
+    }, this.state.is_online ? 'Online' : 'Offline')), /*#__PURE__*/React.createElement("i", {
+      className: "material-icons ml-4 cursor font-weight-bold",
+      style: {
+        cursor: 'pointer'
+      },
       onClick: () => this.closeChat(loaded_chat._id)
-    }, "cached"), /*#__PURE__*/React.createElement("i", {
-      className: "material-icons"
-    }, "message"), /*#__PURE__*/React.createElement("i", {
-      className: "material-icons"
-    }, "menu")))), /*#__PURE__*/React.createElement("div", {
+    }, "close"))), /*#__PURE__*/React.createElement("div", {
       className: "chat-panel"
-    }, chatMessages, /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "overflow-auto",
+      style: {
+        height: '480px'
+      }
+    }, chatMessages), /*#__PURE__*/React.createElement("div", {
       className: "row"
     }, /*#__PURE__*/React.createElement("div", {
       className: "col-12"
@@ -539,10 +593,11 @@ class AllChatsComponent extends React.Component {
       }, /*#__PURE__*/React.createElement("div", {
         className: this.determineChatClass(chat),
         onClick: () => this.loadChat(chat._id)
-      }, /*#__PURE__*/React.createElement("img", {
-        className: "profile-image",
-        src: "https://www.clarity-enhanced.net/wp-content/uploads/2020/06/robocop.jpg",
-        alt: ""
+      }, /*#__PURE__*/React.createElement("i", {
+        className: "fa fa-user-circle",
+        style: {
+          fontSize: '40px'
+        }
       }), /*#__PURE__*/React.createElement("div", {
         className: "text"
       }, /*#__PURE__*/React.createElement("h6", null, chat.customer_name, " ", !chat.is_seen_by_cssa ? /*#__PURE__*/React.createElement("span", {

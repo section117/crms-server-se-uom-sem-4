@@ -8,7 +8,7 @@ const viewAllChats = (req, res) => {
 };
 
 const viewArchivedChats = async (req, res) => {
-	const current_user = req.session.passport.user;
+	const current_user = sessionHelper.getUserFromSession(req.session);
 	const company_id = current_user.company.toString();
 	let chats = [];
 	

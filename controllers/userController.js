@@ -5,7 +5,7 @@ const sessionHelper = require('../helpers/session-helper');
 
 const bcrypt = require('bcrypt');
 const { exist } = require('joi');
-const { companyValidateSchema, userRegistrationSchema, userUpdateSchema, userValidateSchema } = require('../helpers/validate-schema');
+const { companyValidateSchema, userRegistrationSchema, userUpdateSchema } = require('../helpers/validate-schema');
 
 
 const saltRounds = 10;
@@ -126,9 +126,9 @@ const viewProfile = async (req, res) => {
 
 const updateUser = async (req, res) => {
 	const current_user = await userService.getUserByID(
-		req.session.passport.user.id
+		sessionHelper.getUserFromSession
 	);
-	const current_password = await bcrypt.hash(req.body.currentPassword, saltRounds);
+	// const current_password = await bcrypt.hash(req.body.currentPassword, saltRounds);
 
 
 	const user_details = {
@@ -214,7 +214,8 @@ const viewCSSAList = async (req, res) => {
 
 const deleteUser = async (req, res) => {
 	// console.log(req.body);
-	const result = userService.deleteUser(req.body.cssa_id);
+	await userService.deleteUser(req.body.cssa_id);
+	
 	res.redirect('/manage-cssa');
 };
 

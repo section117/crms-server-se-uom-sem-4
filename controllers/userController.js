@@ -60,7 +60,7 @@ const register = async (req, res) => {
 		return res.redirect('/manage-cssa');
 	}
 
-	if (newUser.user_type == 'COMPANY_OWNER') {
+	if (newUser.user_type === 'COMPANY_OWNER') {
 
 		const newCompany = {
 			company_name: req.body.company_name,
@@ -87,7 +87,7 @@ const register = async (req, res) => {
 			exist;
 		}
 	} else {
-		newUser.company = req.session.passport.user.company;
+		newUser.company = sessionHelper.getCompanyIDFromSession(req.session);
 		const cssa = await userService.saveUser(newUser);
 		console.log(cssa);
 		if (cssa) {
@@ -118,7 +118,7 @@ const getCurrentUser = async (req, res) => {
 };
 
 const viewProfile = async (req, res) => {
-	const user = await userService.getUserByID(req.session.passport.user.id);
+	const user = await userService.getUserByID(sessionHelper.getUserIDFromSession(req.session));
 	// console.log(req.flash('message') == '',new Date());
 	res.render('user/profile.ejs', { user: user ,message:{err:req.flash('error'),success:req.flash('success')}});
 
@@ -172,7 +172,7 @@ const updateUser = async (req, res) => {
 	
 	await userService.updateUser(current_user._id, user_details);
 
-	if (current_user.user_type == 'COMPANY_OWNER') {
+	if (current_user.user_type === 'COMPANY_OWNER') {
 
 		const company_id = current_user.company._id;
 
@@ -204,7 +204,7 @@ const updateUser = async (req, res) => {
 
 const viewCSSAList = async (req, res) => {
 	const cssa_list = await userService.getCSSAList(
-		req.session.passport.user.company
+		sessionHelper.getCompanyIDFromSession(req.session)
 	);
 
 	// console.log(req.flash('message'),'123');

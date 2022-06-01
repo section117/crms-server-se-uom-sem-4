@@ -17,6 +17,13 @@ const getUserIDFromSession = session => {
 	else return null;
 };
 
+const getCompanyIDFromSession = session => {
+	if(session && session.passport && session.passport.user && session.passport.user.company_id)
+		return session.passport.user.company_id;
+	else return null;
+};
+
 exports.getUserFromSession = getUserFromSession;
 exports.getUserTypeFromSession = getUserTypeFromSession;
 exports.getUserIDFromSession = getUserIDFromSession;
+exports.getCompanyIDFromSession = getCompanyIDFromSession;

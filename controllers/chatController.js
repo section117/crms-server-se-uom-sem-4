@@ -9,7 +9,7 @@ const viewAllChats = (req, res) => {
 
 const viewArchivedChats = async (req, res) => {
 	const current_user = sessionHelper.getUserFromSession(req.session);
-	const company_id = current_user.company.toString();
+	const company_id = sessionHelper.getCompanyIDFromSession(req.session);
 	let chats = [];
 	
 	if (current_user.user_type === 'COMPANY_OWNER') {

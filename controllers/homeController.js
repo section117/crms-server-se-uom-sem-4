@@ -1,6 +1,8 @@
 const chatService = require('../services/chatService');
 const userService = require('../repositories/userRepository');
 
+const sessionHelper = require('../helpers/session-helper');
+
 const viewHome = (req, res) => {
 	res.render('home/index.ejs');
 };
@@ -11,8 +13,8 @@ const viewSignupPage = (req, res) => {
 };
 
 const viewDashboard = async (req, res) => {
-	const userID = req.session.passport.user.id;
-	const userType = req.session.passport.user.user_type;
+	const userID = sessionHelper.getUserIDFromSession(req.session);
+	const userType = sessionHelper.getUserTypeFromSession(req.session);
 
 	if(userType === 'CSSA') {
 		const activeChats = await chatService.getActiveChatsOfCSSAWithMessages(userID);
@@ -21,7 +23,7 @@ const viewDashboard = async (req, res) => {
 		const negativeFeedback = await chatService.getNegativeFeedback(userID);
 		const resolevedFeedback = await chatService.getResolvedFeedbackForCSSA(userID);
 		res.render('home/dashboard.ejs', {
-			user: req.session.passport.user,
+			user: sessionHelper.getUserFromSession(req.session),
 			activeChats: activeChats.length,
 			closedChats: closedChats.length,
 			positiveFeedback: positiveFeedback.length,
@@ -29,7 +31,7 @@ const viewDashboard = async (req, res) => {
 			resolvedFeedback: resolevedFeedback.length
 		});
 	}else if(userType === 'COMPANY_OWNER') {
-		const companyID = req.session.passport.user.company;
+		const companyID = sessionHelper.getCompanyIDFromSession(req.session);
 		const allChats = await chatService.getAllChatDetails(companyID);
 		const currentMonthChats = await chatService.getCurrentMonthChats(companyID);
 		const currentMontPositiveFeedback = await chatService.getCurrentMonthPositiveFeedback(companyID);
@@ -39,7 +41,7 @@ const viewDashboard = async (req, res) => {
 		const negativeFeedback = await chatService.getNegativeFeedbackForCompany(companyID);
 		const resolvedFeedback = await chatService.getResolvedFeedbackForCompany(companyID);
 		res.render('home/dashboard.ejs', {
-			user: req.session.passport.user,
+			user: sessionHelper.getUserFromSession(req.session),
 			allChats: allChats.length,
 			currentMonthChats: currentMonthChats.length,
 			currentMontPositiveFeedback: currentMontPositiveFeedback.length,

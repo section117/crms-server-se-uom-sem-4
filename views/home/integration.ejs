@@ -13,7 +13,72 @@
         <div class="content">
             <div class="container-fluid">
                 <!--Content goes here-->
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Integrate Chat Plugin with Your Website</h4>
+                        <p class="card-category">Easy and Quick Integration Guide</p>
+                    </div>
+                    <div class="card-body">
+                        <div id="typography">
+                            <div class="card-title">
+                                <h2>Steps</h2>
+                            </div>
+                            <div class="row">
+                                <div>
+                                    <ol class="">
+                                        <li class="">Welcome to the Chat Integration Guide.</li>
+                                        <p>You should have a basic understanding of HTML and CSS in order to proceed with this Guide.</p>
+                                        <li>Add the following Chat Plugin CSS stylesheet to your website's head.</li>
+                                        <p>Make sure you add the Chat Plugin stylesheet after the stylesheets of your website.<br>
+                                        This stylesheet <b>will not affect</b> the styles of your website in any way.</p>
+                                        <code>
+                                            <%= '<head>' %><br>
+                                            <%= '<!-- Stylesheets of your website. -->' %><br>
+                                            <%= '<link href="'+process.env.APP_URL+'/assets/chat-plugin/chat-plugin-v1.0.0.css" rel="stylesheet"/>' %><br>
+                                            <%= '</head>' %>
+                                        </code>
 
+                                        <li>Add the following Chat Plugin JavaScript file to your website right before the closing of the
+                                            <code><%= ' <body> '%> </code>tag.</li>
+                                        <code>
+                                            <%= '<body>' %><br>
+                                            <%= '<!-- Body content of your website. -->' %><br>
+                                            <%= '<!-- Other JavaScript files like jquery and bootstrap. -->' %><br>
+                                            <%= '<script src="'+process.env.APP_URL+'/assets/chat-plugin/chat-plugin-v1.0.0.js"></script>' %><br>
+                                            <%= '</body>' %>
+                                        </code>
+
+                                        <li>Now copy and paste the following <code><%= '<div>' %></code> tag in anywhere suitable
+                                            inside the <code><%= '<body>' %></code> of your website.</li>
+                                        <p>This <code><%= '<div>' %></code> is used to render the Chat Plugin in your website.
+                                            <br>We recommend keeping the position fixed, so that you can place this
+                                                <code><%= '<div>' %></code> tag anywhere inside the <code><%= '<body>' %></code>.
+                                        <br>But you are free to position this <code><%= '<div>' %></code> tag anywhere
+                                            inside the <code><%= '<body>' %></code>.</p>
+                                        <code>
+                                            <%= '<body>' %><br>
+                                            <%= '<div id="chat-widget-se-sem-4" data-company_id="'+user.company+'" data-dashboard_domain="'+process.env.APP_URL+'" style="position: fixed; right: 0; bottom: 0; z-index: 100;"></div>' %>
+                                            <br>
+                                            <%= '<!-- Body content of your website. -->' %><br>
+                                            <%= '</body>' %>
+                                        </code>
+
+                                        <li>That's all you have to do. Visit your website and enjoy the Live Chat in Real-time. :)</li>
+                                    </ol>
+                                </div>
+                                <div>
+                                    <h3>Additional Notes</h3>
+                                    <ul>
+                                        <li>The stylesheet of Chat Plugin will not affect your website's styles and nor
+                                            your website's styles will affect the Chat Plugin.</li>
+                                        <li>In the step 4, if the Z-index is not enough to keep the Chat Plugin on top,
+                                        you can increase the Z-index.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!--End content-->
             </div>
         </div>

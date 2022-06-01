@@ -93,7 +93,7 @@
                                                     <i class="material-icons">sentiment_very_satisfied</i>
                                                 </div>
                                                 <p class="card-category">Customer Satisfaction Rate</p>
-                                                <h3 class="card-title"><%= Math.round(positiveFeedback/allChats * 100)%>%</h3>
+                                                <h3 class="card-title"><%= allChats === 0 ? 0 : Math.round(positiveFeedback/allChats * 100)%>%</h3>
                                             </div>
                                             <div class="card-footer">
                                                 <div class="stats">
@@ -110,7 +110,7 @@
                                                     <i class="material-icons">trending_up</i>
                                                 </div>
                                                 <p class="card-category">Question Resolved Rate</p>
-                                                <h3 class="card-title"><%= Math.round(resolvedFeedback/allChats*100)%>%</h3>
+                                                <h3 class="card-title"><%= allChats === 0? 0: Math.round(resolvedFeedback/allChats*100)%>%</h3>
                                             </div>
                                             <div class="card-footer">
                                                 <div class="stats">
@@ -184,7 +184,7 @@
                                                 </div>
                                                 <p class="card-category">Questions Resolved Rate</p>
                                                 <h3 class="card-title">
-                                                    <%= Math.round(resolvedFeedback/(activeChats + closedChats) * 100) %>%
+                                                    <%= (activeChats + closedChats) === 0 ? 0 : Math.round(resolvedFeedback/(activeChats + closedChats) * 100) %>%
                                                 </h3>
                                             </div>
                                             <div class="card-footer">
@@ -217,7 +217,7 @@
                                                     <i class="material-icons">sentiment_very_satisfied</i>
                                                 </div>
                                                 <p class="card-category">Customer Satisfaction Rate</p>
-                                                <h3 class="card-title"><%= Math.round(positiveFeedback/(activeChats + closedChats) * 100) %>%</h3>
+                                                <h3 class="card-title"><%= (activeChats + closedChats) === 0? 0 : Math.round(positiveFeedback/(activeChats + closedChats) * 100) %>%</h3>
                                             </div>
                                             <div class="card-footer">
                                                 <div class="stats">

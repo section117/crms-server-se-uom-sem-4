@@ -126,11 +126,11 @@ const viewProfile = async (req, res) => {
 
 const updateUser = async (req, res) => {
 	const current_user = await userService.getUserByID(
-		sessionHelper.getUserFromSession
+		sessionHelper.getUserIDFromSession(req.session)
 	);
 	// const current_password = await bcrypt.hash(req.body.currentPassword, saltRounds);
 
-
+	// console.log(current_user);
 	const user_details = {
 		email: req.body.email,
 		first_name: req.body.first_name,
@@ -198,7 +198,7 @@ const updateUser = async (req, res) => {
 		}
 
 	}
-
+	req.flash('success','Updated successfully!');
 	return res.redirect('/profile');
 };
 

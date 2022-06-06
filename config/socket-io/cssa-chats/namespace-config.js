@@ -5,7 +5,7 @@ const { cssaSendMessage } = require('../../../services/chatMessagesService');
 const { toggleCSSAOnlineStatus } = require('../../../services/userService');
 const { closeChat, markChatSeenByCSSA } = require('../../../services/chatService');
 const { sendMessageToCustomer, sendCSSASeenResponseToCustomer, indicateCSSATypingToCustomer,
-	sendCSSAToggleOnlineStatusResponseToCustomer
+	sendCSSAToggleOnlineStatusResponseToCustomer, cssaCloseChatResponseToCustomer
 } = require('../message-channel');
 
 const createAndConfigureCSSAMessagesNamespace = (io) => {
@@ -63,6 +63,7 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 				response['status'] = 'OK';
 			else response['status'] = 'FAILED';
 			emitCSSACloseChatResponse(response, user_id);
+			cssaCloseChatResponseToCustomer(response, chat_id);
 		});
 
 		socket.on('cssa-chat-seen', async (arg) => {

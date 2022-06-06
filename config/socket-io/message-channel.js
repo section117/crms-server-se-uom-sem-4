@@ -24,8 +24,14 @@ const sendCSSAToggleOnlineStatusResponseToCustomer = (is_online, active_chat_ids
 	sendCSSAToggleOnlineStatusResponse(is_online, active_chat_ids);
 };
 
+const sendCSSACloseChatResponseToCustomer = (response, chat_id) => {
+	const { sendCSSACloseChatResponse } = require('./customer-chats/namespace-config');
+	sendCSSACloseChatResponse(response, chat_id);
+};
+
 exports.sendMessageToCSSA = sendMessageToCSSA;
 exports.sendMessageToCustomer = sendMessageToCustomer;
 exports.sendCSSASeenResponseToCustomer = sendCSSASeenResponseToCustomer;
 exports.indicateCSSATypingToCustomer = indicateCSSATypingToCustomer;
 exports.sendCSSAToggleOnlineStatusResponseToCustomer = sendCSSAToggleOnlineStatusResponseToCustomer;
+exports.cssaCloseChatResponseToCustomer = sendCSSACloseChatResponseToCustomer;

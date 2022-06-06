@@ -71,8 +71,14 @@ const sendCSSAToggleOnlineStatusResponse = (is_online, active_chat_ids) => {
 	});
 };
 
+//Emit cssa close chat response to the customer
+const sendCSSACloseChatResponse = (response, chat_id) => {
+	emitEventByChatID('cssa-close-chat-response', response, chat_id, null);
+};
+
 exports.createAndConfigureCustomerChatsNamespace = createAndConfigureCustomerChatsNamespace;
 exports.sendCSSAMessage = sendCSSAMessage;
 exports.sendCSSASeenResponse = sendCSSASeenResponse;
 exports.indicateTypingToCustomer = indicateTypingToCustomer;
 exports.sendCSSAToggleOnlineStatusResponse = sendCSSAToggleOnlineStatusResponse;
+exports.sendCSSACloseChatResponse = sendCSSACloseChatResponse;

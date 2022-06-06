@@ -63,8 +63,7 @@ class AllChatsComponent extends React.Component {
   async componentDidMount() {
     let newState = {};
     const user = await this.getUser();
-    const activeChats = await this.getAllActiveChats();
-    // console.log(activeChats);
+    const activeChats = await this.getAllActiveChats(); // console.log(activeChats);
 
     if (user) {
       newState['is_online'] = user.is_online;
@@ -197,7 +196,8 @@ class AllChatsComponent extends React.Component {
       }
 
       return 0;
-    });
+    }); // console.log(chatIds);
+
     return chatIds;
   };
   inputMessage = event => {
@@ -354,8 +354,8 @@ class AllChatsComponent extends React.Component {
         active_chat_ids,
         active_chats
       };
-      if (loaded_chat_id === chat_id) newState['is_initial'] = true;
-      // console.log(newState);
+      if (loaded_chat_id === chat_id) newState['is_initial'] = true; // console.log(newState);
+
       this.setState(newState);
     }
   };
@@ -498,7 +498,7 @@ class AllChatsComponent extends React.Component {
           key: cm._id,
           className: "row no-gutters"
         }, /*#__PURE__*/React.createElement("div", {
-          className: "col-md-3"
+          className: "col-md-6"
         }, /*#__PURE__*/React.createElement("div", {
           className: "chat-bubble chat-bubble--left"
         }, cm.message)));
@@ -508,7 +508,7 @@ class AllChatsComponent extends React.Component {
           key: cm._id,
           className: "row no-gutters"
         }, /*#__PURE__*/React.createElement("div", {
-          className: "col-md-3 offset-md-9"
+          className: "col-md-6 offset-md-6"
         }, /*#__PURE__*/React.createElement("div", {
           className: "chat-bubble chat-bubble--right"
         }, cm.message)));

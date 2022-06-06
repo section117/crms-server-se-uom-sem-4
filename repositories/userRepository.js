@@ -42,7 +42,7 @@ const saveCompany = async (company) => {
 	});
 
 	company_id = newCompany._id;
-	console.log(company_id);
+	// console.log(company_id);
 
 	newCompany.save((err) => {
 		if (err) {
@@ -70,12 +70,11 @@ const getUserByID = async (user_id) => {
 
 const toggleCSSAOnlineStatus = async (user_id, is_online) => {
 	try {
-		const user = await User.findOneAndUpdate(
+		return await User.findOneAndUpdate(
 			{_id: ObjectId(user_id)},
 			{is_online},
 			{new: true}
 		);
-		return user;
 	} catch (e) {
 		return null;
 	}
@@ -83,8 +82,7 @@ const toggleCSSAOnlineStatus = async (user_id, is_online) => {
 
 const updateUser = async (user_id, user_details) => {
 	try {
-		const user = await User.findByIdAndUpdate(user_id, user_details);
-		return user;
+		return await User.findByIdAndUpdate(user_id, user_details);
 	}catch (error) {
 		console.log(error);
 		return null;
@@ -94,8 +92,7 @@ const updateUser = async (user_id, user_details) => {
 
 const updateCompany = async (company_id, company_details) => {
 	try {
-		const company = await Company.findByIdAndUpdate(company_id, company_details);
-		return company;
+		return await Company.findByIdAndUpdate(company_id, company_details);
 	}catch (error) {
 		console.log(error);
 		return null;
@@ -105,13 +102,12 @@ const updateCompany = async (company_id, company_details) => {
 
 const getCSSAList = async (company_id) => {
 	try {
-		const user = await User.find({company: company_id, user_type: 'CSSA'}).select({
+		return await User.find({company: company_id, user_type: 'CSSA'}).select({
 			first_name: 1,
 			last_name: 1,
 			email: 1,
 			_id: 1,
 		});
-		return user;
 	}catch (error) {
 		console.log(error);
 		return null;
@@ -121,8 +117,7 @@ const getCSSAList = async (company_id) => {
 
 const deleteUser = async (user_id) => {
 	try {
-		const user = await User.findByIdAndRemove(user_id);
-		return user;
+		return await User.findByIdAndRemove(user_id);
 	}catch (error) {
 		console.log(error);
 		return null;

@@ -34,7 +34,7 @@ const register = async (req, res) => {
 		password: hashedPassword,
 	};
   
-	console.log(newUser);
+	// console.log(newUser);
 
 	const { error, value } = userRegistrationSchema.validate(newUser, {
 		abortEarly: false,
@@ -89,7 +89,7 @@ const register = async (req, res) => {
 	} else {
 		newUser.company = sessionHelper.getCompanyIDFromSession(req.session);
 		const cssa = await userService.saveUser(newUser);
-		console.log(cssa);
+		// console.log(cssa);
 		if (cssa) {
 			console.log('registration successful');
 			req.flash('success','CSSA registered successfully');

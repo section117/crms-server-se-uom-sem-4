@@ -76,7 +76,7 @@ const createAndConfigureCSSAMessagesNamespace = (io) => {
 		});
 
 		socket.on('cssa-typing-indicator-publish', (arg) => {
-			console.log('arg in typing indicator',arg);
+			// console.log('arg in typing indicator',arg);
 			indicateCSSATypingToCustomer(arg.chat_id);
 		});
 

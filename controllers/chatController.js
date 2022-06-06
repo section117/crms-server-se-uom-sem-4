@@ -17,6 +17,7 @@ const viewArchivedChats = async (req, res) => {
 	}else{
 		const cssa_id = current_user.id;
 		chats = await chatService.getAllChats(company_id,cssa_id);
+
 	}
 
 	res.render('chats/saved-chats.ejs', { chats: chats });
@@ -53,7 +54,7 @@ const createNewChat = async (req, res) => {
 //add review to a closed chat
 const addChatReview = async (req, res) => {
 
-	console.log('chat review', req.body);
+	// console.log('chat review', req.body);
 
 	//validate request body
 	const { error, value } = reviewValidateSchema.validate(req.body, { abortEarly: false });
@@ -61,7 +62,7 @@ const addChatReview = async (req, res) => {
 
 	const review = await chatService.addChatReview(value);
 
-	console.log('review here', review);
+	// console.log('review here', review);
 	if (!review) return res.status(202).send({ data: null, status: 'Failed' });
 	res.status(200).send({ data: review, status: 'Successfully added' });
 };

@@ -35,6 +35,11 @@
                                 <div class="text">
                                     <h6><%= chats[i].customer_name %></h6>
                                     <p class="text-muted"><%= chats[i].title_question %></p>
+                                    <% if(chats[i].assigned_cssa.first_name) {%>
+                                    <div class="text-muted font-weight-bold" >Assigned CSSA </div>
+                                    <div class="text-muted"><%= chats[i].assigned_cssa.first_name + ' ' + chats[i].assigned_cssa.last_name %></div>
+                                    <div class="text-muted"><%= chats[i].assigned_cssa.email %></div>
+                                    <%}%>
                                 </div>
                                 <input type="hidden" id="cust-name" value=<%- chats[i].customer_name %> >
                                 <input type="hidden" id="cust-email" value=<%- chats[i].customer_email %> >

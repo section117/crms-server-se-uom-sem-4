@@ -42,7 +42,6 @@ const validateCompany = async (company_id) => {
 
 //assign a CSSA to a chat
 const assignCSSA = async (company_id) => {
-	console.log('company id', company_id);
 	try {
 		return await User.findOne(
 			{
@@ -144,7 +143,6 @@ const initNewChat = async (
 		is_seen_by_cssa: false,
 	});
 
-	console.log('chat', chat);
 
 	try {
 		const newChat = await chat.save();
@@ -197,7 +195,13 @@ const getAllChats = async (company_id,cssa_id) => {
 		if(cssa_id){
 			return Chat.find({ company: ObjectId(company_id),assigned_cssa:cssa_id,status:'CLOSED' });}
 		else{
-			return Chat.find({ company: ObjectId(company_id),status:'CLOSED'});
+
+			try {
+				return Chat.find({company: ObjectId(company_id), status: 'CLOSED'}).populate('assigned_cssa');
+			} catch (error) {
+				console.log(error);
+				return [];
+			}
 		}
 
 	} catch (e) {

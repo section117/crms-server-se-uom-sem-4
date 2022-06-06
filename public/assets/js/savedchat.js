@@ -8,14 +8,17 @@ var chatelements = document.getElementsByClassName('selectchats');
 function generate_message_components(messages) {
 	const panel = document.getElementsByClassName('chat-panel')[0];
 
-	console.log(messages);
+	// console.log(messages);
 	
 	messages.forEach(message => {
 		const div1 = document.createElement('div');
 		div1.classList.add('row');
 		div1.classList.add('no-gutters');
 		const div2 = document.createElement('div');
-		div2.classList.add('col-md-3');
+		div2.classList.add('col-md-8');
+		if (!message.is_incoming) {
+			div2.classList.add('offset-md-4');
+		}
     
 		const div3 = document.createElement('div');
 		div3.classList.add('chat-bubble');

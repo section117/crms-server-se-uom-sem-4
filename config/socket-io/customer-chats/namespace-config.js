@@ -13,7 +13,7 @@ const createAndConfigureCustomerChatsNamespace = (io) => {
 		//Customer Message Send Listener
 		socket.on('customer-send-message', async message => {
 			const result = await customerSendMessage({message: message, chat_id: chatID});
-			console.log('chat message: ', result);
+			// console.log('chat message: ', result);
 			if(!result) {
 				//TODO: callback function
 				console.log('FAILED');

@@ -64,7 +64,7 @@ class AllChatsComponent extends React.Component {
     let newState = {};
     const user = await this.getUser();
     const activeChats = await this.getAllActiveChats();
-    console.log(activeChats);
+    // console.log(activeChats);
 
     if (user) {
       newState['is_online'] = user.is_online;
@@ -75,7 +75,7 @@ class AllChatsComponent extends React.Component {
       //newState['active_chats'] = activeChats;
       newState['active_chats'] = {};
       activeChats.forEach(ch => {
-        console.log(ch);
+        // console.log(ch);
         newState['active_chats'][ch._id] = ch;
       });
       newState['active_chat_ids'] = activeChats.map(ch => ch._id);
@@ -198,7 +198,6 @@ class AllChatsComponent extends React.Component {
 
       return 0;
     });
-    console.log(chatIds);
     return chatIds;
   };
   inputMessage = event => {
@@ -356,7 +355,7 @@ class AllChatsComponent extends React.Component {
         active_chats
       };
       if (loaded_chat_id === chat_id) newState['is_initial'] = true;
-      console.log(newState);
+      // console.log(newState);
       this.setState(newState);
     }
   };

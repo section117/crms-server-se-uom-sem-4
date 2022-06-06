@@ -28,7 +28,7 @@ const markChatSeenByCSSA = async (chat_id) => {
 };
 
 const getAllChats = async (company_id,cssa_id) => {
-	return await cssa_id ? chatRepository.getAllChats(company_id,cssa_id) : chatRepository.getAllChats(company_id);
+	return await cssa_id ? chatRepository.getAllChats(company_id,cssa_id) : chatRepository.getAllChats(company_id,null);
 };
 
 const getAllmsgs = async (company_id) => {

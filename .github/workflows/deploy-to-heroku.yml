@@ -19,7 +19,7 @@ jobs:
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
         env:
-          HD_NODE_ENV: "development"
+          HD_NODE_ENV: "production"
           HD_SESSION_SECRET: ${{ secrets.HEROKU_APPLICATION_SESSION_SECRET }}
           HD_DB_CONNECTION_STRING: ${{ secrets.HEROKU_APPLICATION_DB_CONNECTION_STRING }}
           HD_LOG_FORMAT_MORGAN: "tiny"

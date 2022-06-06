@@ -115,6 +115,9 @@ class AllChatsComponent extends React.Component {
     socket.on('customer-message-send', response => {
       this.listenCustomerMessageSend(response);
     });
+    socket.on('customer-close-chat-response', response => {
+      this.listenCloseChatResponse(response);
+    });
   }
 
   getUser = async () => {

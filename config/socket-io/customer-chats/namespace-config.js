@@ -15,7 +15,6 @@ const createAndConfigureCustomerChatsNamespace = (io) => {
 			const result = await customerSendMessage({message: message, chat_id: chatID});
 			// console.log('chat message: ', result);
 			if(!result) {
-				//TODO: callback function
 				console.log('FAILED');
 			}else {
 				const {chatMessage, chat} = result;

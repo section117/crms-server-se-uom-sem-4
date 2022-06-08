@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../components/head.ejs'); %>
+    <title>Example Page | <%= process.env.APP_NAME %></title>
+</head>
+
+<body class="">
+<div class="wrapper">
+    <%- include('../components/sidebar.ejs', {slug: 'example'}); %>
+    <div class="main-panel">
+        <%- include('../components/navbar.ejs', {name: 'Example Page', url: '/example'}); %>
+        <div class="content">
+            <div class="container-fluid">
+                <!--Content goes here-->
+
+                <!--End content-->
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../components/js-scripts.ejs'); %>
+</body>
+</html>

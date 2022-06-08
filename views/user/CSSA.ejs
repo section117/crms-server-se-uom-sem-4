@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../components/head.ejs'); %>
+    <title>CSSA Management | <%= process.env.APP_NAME %></title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <%- include('../components/sidebar.ejs', {slug: 'manage-cssa'}); %>
+      <div class="main-panel">
+        <%- include('../components/navbar.ejs', {name: 'CSSA Management', url: '/manage-cssa'}); %>
+        <div class="content">
+          <div class="container-fluid">
+          <h2 class="font-weight-bold">Manage your CSSAs</h2>
+          <div class="container d-flex">
+            <div class="col-lg-6">
+              <h3>Add New CSSA</h3>
+              <% if (message.err != '' || message.success != '') { %>
+                         
+                <div class="alert alert-secondary" role="alert">
+                
+                    <small class="text-<%- message.err != ''?'danger':'success' %>  font-weight-bold"><%- message.err != ''?message.err:message.success %> </small>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            <% } %>
+              <form class="pr-5" method="post" action="">
+                <div class="form-outline mb-4">
+                  <input
+                    type="email"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="email"
+                  />
+                  <label class="form-label" for="form3Example3">email</label>
+                </div>
+
+                <div class="form-outline mb-4">
+                  <input
+                    type="text"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="first_name"
+                  />
+                  <label class="form-label" for="form3Example3"
+                    >first name</label
+                  >
+                </div>
+
+                <div class="form-outline mb-4">
+                  <input
+                    type="text"
+                    id="form3Example3"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="last_name"
+                  />
+                  <label class="form-label" for="form3Example3"
+                    >last name</label
+                  >
+                </div>
+
+                <div class="form-outline mb-3">
+                  <input
+                    type="password"
+                    id="form3Example4"
+                    class="form-control form-control-lg"
+                    placeholder=""
+                    name="password"
+                  />
+                  <label class="form-label" for="form3Example4">Password</label>
+                </div>
+                <input type="hidden" value="CSSA" name="user_type" />
+                <input
+                  type="submit"
+                  value="Add CSSA"
+                  class="btn btn-primary btn-lg"
+                />
+              </form>
+            </div>
+            <div class="col-lg-6">
+              <h3>Available CSSAs</h3>
+              <div class="container">
+                <% if (cssa_list.length == 0) { %>
+                 <p class="text-primary">No CSSAs available for your company</p>
+                <% } else { %>
+                 
+                <% cssa_list.forEach(cssa => { %>
+                <div class="card pd-4 m-1">
+                  <div class="d-flex">
+                    <div class="card-body">
+                      <div class="card-title">
+                        <h4>
+                          <strong
+                            ><%= cssa.first_name %> <%= cssa.last_name
+                            %></strong
+                          >
+                        </h4>
+                      </div>
+                      <p class="card-text"><%= cssa.email %></p>
+                    </div>
+                    <div
+                      class="d-flex align-items-end flex-column justify-content-center"
+                    >
+                      <form action="/delete-cssa" method="post">
+                        <input
+                          type="hidden"
+                          name="cssa_id"
+                          value="<%= cssa._id %>"
+                        />
+                        <button type="submit" class="btn btn-danger mr-2">
+                          Remove
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <% }) }%>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <%- include('../components/js-scripts.ejs'); %>
+  </body>
+</html>

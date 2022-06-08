@@ -1,0 +1,92 @@
+<div
+  class="sidebar"
+  data-color="purple"
+  data-background-color="white"
+  data-image="../assets/img/sidebar-1.jpg"
+>
+  <!--
+    Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+
+    Tip 2: you can also add an image using data-image tag
+-->
+  <div class="logo">
+    <a href="/" class="simple-text logo-normal">
+      CRMS
+    </a>
+  </div>
+  <div
+    class="sidebar-wrapper ps-container ps-theme-default"
+    data-ps-id="42b95c38-ed75-b432-7146-675901c29f14"
+  >
+    <ul class="nav">
+      <li class="nav-item <% if(slug && slug === 'dashboard'){ %> active <% } %>">
+        <a class="nav-link" href="/dashboard">
+          <i class="material-icons">dashboard</i>
+          <p>Dashboard</p>
+        </a>
+      </li>
+      <% if (renderOnlyForRole(user, 'COMPANY_OWNER')) { %>
+      <li class="nav-item <% if(slug && slug === 'integration'){ %> active <% } %>">
+        <a class="nav-link" href="/integration">
+          <i class="material-icons">integration_instructions</i>
+          <p>Integration</p>
+        </a>
+      </li>
+      <% } %>
+      <% if (renderOnlyForRole(user, 'CSSA')) { %>
+      <li class="nav-item <% if(slug && slug === 'chats'){ %> active <% } %>">
+        <a class="nav-link" href="/chats">
+          <i class="material-icons">chat</i>
+          <p>Chats</p>
+        </a>
+      </li>
+      <% } %>
+      <li class="nav-item <% if(slug && slug === 'archives'){ %> active <% } %>">
+        <a class="nav-link" href="/chats/archives">
+          <i class="material-icons">archive</i>
+          <p>Archives</p>
+        </a>
+      </li>
+      <li class="nav-item <% if(slug && slug === 'profile'){ %> active <% } %>">
+        <a class="nav-link" href="/profile">
+          <i class="material-icons">person</i>
+          <p>Profile</p>
+        </a>
+      </li>
+      <% if (renderOnlyForRole(user, 'COMPANY_OWNER')) { %>
+        <li class="nav-item <% if(slug && slug === 'manage-cssa'){ %> active <% } %>">
+          <a class="nav-link" href="/manage-cssa">
+            <i class="material-icons">people</i>
+            <p>CSSA Management</p>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">
+          <i class="material-icons">logout</i>
+          <p>Logout</p>
+        </a>
+      </li>
+    </ul>
+    <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px">
+      <div
+        class="ps-scrollbar-x"
+        tabindex="0"
+        style="left: 0px; width: 0px"
+      ></div>
+    </div>
+    <div class="ps-scrollbar-y-rail" style="top: 0px; right: 0px">
+      <div
+        class="ps-scrollbar-y"
+        tabindex="0"
+        style="top: 0px; height: 0px"
+      ></div>
+    </div>
+  </div>
+  <div
+    class="sidebar-background"
+    style="background-image: url(../assets/img/sidebar-1.jpg)"
+  ></div>
+</div>

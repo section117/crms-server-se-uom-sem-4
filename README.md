@@ -1,5 +1,6 @@
 # Customer Relationship Management System
-Customer Relationship Management System with NodeJS, Express, EJS and SocketIO for the Semester 4 Software Engineering Project
+Customer live chat Management System with NodeJS, Express,React, EJS and SocketIO for the Semester 4 Software Engineering Project.
+
 
 # Installation Guide
 <ul>
